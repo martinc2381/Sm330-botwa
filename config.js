@@ -64,7 +64,7 @@ module.exports = kconfig = async (kill, message) => {
         const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
         const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
 		const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
-        const ownerNumber = '5518***@c.us' // MUDE ISSO PARA O SEU NUMERO
+        const ownerNumber = '9984907794' // MUDE ISSO PARA O SEU NUMERO
         const isOwner = sender.id === ownerNumber
         global.pollfile = 'poll_Config_'+chat.id+'.json'
         global.voterslistfile = 'poll_voters_Config_'+chat.id+'.json'
@@ -2696,7 +2696,7 @@ module.exports = kconfig = async (kill, message) => {
 			const timed = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
 			const allin = `Olá usuário "@${sender.id}"!\n\nLevei ${processTime(t, moment())} segundos para te responder.\n\nAgora são exatas "${timed}".\nAbaixo estão minhas funções.\n`
             kill.sendTextWithMentions(from, allin + help, id)
-            kill.reply(from, 'De otros comandos tenemos...\n\n*/Admins* _es para administradores._\n\n*/Kill* _es solo para mi dueño._\n\n*/Adult* _es el menú de comandos para adultos😈._\n\n*/Down* _es el menú de descarga de música y video._', id)
+            kill.reply(from, '💢De otros comandos tenemos...\n\n*/Admins* _❌es para administradores._\n\n*/Kill* _🖤🖤es solo para mi dueño._\n\n*/Adult* _🍆🍆es el menú de comandos para adultos😈._\n\n*/Down* _⚠es el menú de descarga de música y video._', id)
             break
 
 
