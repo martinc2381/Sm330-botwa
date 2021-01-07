@@ -1827,7 +1827,7 @@ module.exports = kconfig = async (kill, message) => {
 		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
 		kill.reply(from, mess.wait, id)
 		await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/epep?text=${body.slice(9)}`, '', '', id)
-		break*/
+		break
 		
 		
 	case 'logo':
