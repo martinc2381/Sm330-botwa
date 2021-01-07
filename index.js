@@ -37,9 +37,9 @@ const start = (kill = new Client()) => {
         kill.onAddedToGroup(((chat) => {
             let totalMem = chat.groupMetadata.participants.length
             if (totalMem < 20) { 
-            	kill.sendText(chat.id, `Um novo grupo, Eba! 😃\nUma pena que vocês não tem o requisito, que é ter pelo menos [20] membros. Você possui ${totalMem}, junte mais pessoas! 😉`).then(() => kill.leaveGroup(chat.id))
+            	kill.sendText(chat.id, `Un nuevo grupo, uwu! 😃\nLástima que no tenga el requisito, que es tener al menos [20] miembros. Tienes ${totalMem}, reune más gente! 😉`).then(() => kill.leaveGroup(chat.id))
             } else {
-                kill.sendText(chat.groupMetadata.id, `Oi! 🌟\nFui requisitada como BOT para esse grupo, e estarei a disposição de vocês! 🤖\nSe quiserem ver minhas funcões usem /menu!`)
+                kill.sendText(chat.groupMetadata.id, `Oi! 🌟\nMe solicitaron como BOT para este grupo, ¡y estaré a su disposición! 🤖\nSi quieres ver mis funciones usa /menu!`)
             }
         }))
 		
@@ -52,7 +52,7 @@ const start = (kill = new Client()) => {
 
         // Bloqueia na call
         kill.onIncomingCall(( async (call) => {
-            await kill.sendText(call.peerJid, 'Que pena! Chamadas não são suportadas e atrapalham muito! 😊\nTe bloqueei para evitar novas, contate o dono para efetuar o desbloqueio. 👋')
+            await kill.sendText(call.peerJid, 'Que pena! ¡Las llamadas no son compatibles y se interponen en el camino! 😊\nTe bloqueé para evitar nuevos incidentes, contacta al propietario para desbloquear. 👋')
             .then(() => kill.contactBlock(call.peerJid)) // se quiser, pode inserir seu numero acima na sendText com wa.me ou apenas o numero, ou pode mudar pra kill.sendTextWithMentions pra enviar te marcando
         }))
     }
