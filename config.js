@@ -225,7 +225,7 @@ module.exports = kconfig = async (kill, message) => {
                     var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                     var base64img = imageBase64
                     var outFile = './lib/media/img/noBg.png'
-                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'API DO SITE REMOVE.BG', size: 'auto', type: 'auto', outFile }) // bota sua propria api ai, cuidado no limite mensal
+                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'https://api.apiflash.com/v1/urltoimage?access_key=e03d8ce2eb6e4fda8ee7b7b196ee1adb&format=jpeg&fresh=true&ttl=1&url=https%3A%2F%2Fi.pinimg.com%2F474x%2F4e%2Fb2%2F4c%2F4eb24c10289e7e411dde536668d6e374.jpg', size: 'auto', type: 'auto', outFile }) // bota sua propria api ai, cuidado no limite mensal
                     await fs.writeFile(outFile, result.base64img)
                     await kill.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
 					await kill.reply(from, 'Asegúrese de evitar usar esto cuando no lo necesite,', id)
