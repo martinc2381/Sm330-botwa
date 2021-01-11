@@ -106,7 +106,7 @@ module.exports = kconfig = async (kill, message) => {
 	
 
 	case 'Anonymod':
-    await kill.reply(from, '', id)
+    await kill.reply(from, 'El bro no me a pasado sus links xd', id)
     break
 	
 	    case 'samu330':
@@ -232,14 +232,13 @@ module.exports = kconfig = async (kill, message) => {
                     var mediaData = await decryptMedia(message, uaOverride)
                     var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                     var base64img = imageBase64
-                    var outFile = './lib/media/img/noBg.png'
-                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'https://api.apiflash.com/v1/urltoimage?access_key=e03d8ce2eb6e4fda8ee7b7b196ee1adb&format=jpeg&fresh=true&ttl=1&url=https%3A%2F%2Fi.pinimg.com%2F474x%2F4e%2Fb2%2F4c%2F4eb24c10289e7e411dde536668d6e374.jpg', size: 'auto', type: 'auto', outFile }) // bota sua propria api ai, cuidado no limite mensal
+                    var outFile = './media/img/noBg.png'
+                    // untuk api key kalian bisa dapatkan pada website remove.bg
+                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'API-KEY', size: 'auto', type: 'auto', outFile })
                     await fs.writeFile(outFile, result.base64img)
-                    await kill.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
-					await kill.reply(from, 'Asegúrese de evitar usar esto cuando no lo necesite,', id)
+                    await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
                 } catch(err) {
                     console.log(err)
-					await kill.reply(from, '¡Ups! ¡Algo salió mal con ese comando!', id)
                 }
             }
             break
@@ -765,17 +764,24 @@ const ytmp3 = (teks) => {
 
 
         case 'mp4':
-            if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
-            axios.get(`http://st4rz.herokuapp.com/api/ytv2?url=${body.slice(5)}`)
-            .then(async(rest) => {
-					var mp4 = rest.data.result
-					var tmp4 = rest.data.title
-					var m4tu = rest.data.thumb
-					var m4fo = rest.data.ext
-					await kill.sendFileFromUrl(from, m4tu, '', `Titulo: ${tmp4}\nFormato:${m4fo}\n\nEspero haberlo hecho bien y ... ¡ahora solo espera! Pero evita usar de nuevo hasta que termine eh!`, id)
-					await kill.sendFileFromUrl(from, mp4, `video.mp4`, tmp4, id)
-                })
-			break
+            if (args.length === 0) return client.reply(from, 'Pege el link de YouTube despues del comando')
+            let isLin = args[1].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
+            if (!isLin) return client.reply(from, mess.error.Iv, id)
+            try {
+                client.reply(from, mess.wait, id)
+                const ytv = await get.get(`https://mhankbarbars.herokuapp.com/api/ytv?url=${args[1]}&apiKey=${apiKey}`).json()
+                if (ytv.error) {
+                    client.reply(from, ytv.error, id)
+                } else {
+                    if (Number(ytv.filesize.split(' MB')[0]) > 40.00) return client.reply(from, 'Maaf durasi video sudah melebihi batas maksimal!', id)
+                    client.sendFileFromUrl(from, ytv.thumb, 'thumb.jpg', `➸ *Title* : ${ytv.title}\n➸ *Filesize* : ${ytv.filesize}\n\nEspere un momento a que el proceso de envío del archivo termine, esto puede tardar:)`, id)
+                    await client.sendFileFromUrl(from, ytv.result, `${ytv.title}.mp4`, '', id).catch(() => client.reply(from, mess.error.Yt4, id))
+                }
+            } catch (er) {
+                client.sendText(ownerNumber[0], 'Error ytmp4 : '+ er)
+                client.reply(from, mess.error.Yt4, id)
+            }
+            break
 			
         case 'video':
             if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
@@ -918,28 +924,28 @@ const ytmp3 = (teks) => {
             if (args.length == 1) return kill.reply(from, 'Comprensible, pero no utilizable, olvidó definir el idioma y la frase.')
             const ttsId = require('node-gtts')('id')
             const ttsEn = require('node-gtts')('en')
-			const ttsJp = require('node-gtts')('ja')
+	    const ttsJp = require('node-gtts')('ja')
             const ttsAr = require('node-gtts')('ar')
             const ttsAf = require('node-gtts')('af')
             const ttsSq = require('node-gtts')('sq')
-			const ttsHy = require('node-gtts')('hy')
+            const ttsHy = require('node-gtts')('hy')
             const ttsCa = require('node-gtts')('ca')
-			const ttsZh = require('node-gtts')('zh')
-			const ttsCn = require('node-gtts')('zh-cn')
-			const ttsTw = require('node-gtts')('zh-tw')
-			const ttsYu = require('node-gtts')('zh-yue')
-			const ttsHr = require('node-gtts')('hr')
-			const ttsCs = require('node-gtts')('cs')
+            const ttsZh = require('node-gtts')('zh')
+	    const ttsCn = require('node-gtts')('zh-cn')
+	    const ttsTw = require('node-gtts')('zh-tw')
+	    const ttsYu = require('node-gtts')('zh-yue')
+	    const ttsHr = require('node-gtts')('hr')
+            const ttsCs = require('node-gtts')('cs')
             const ttsDa = require('node-gtts')('da')
             const ttsNl = require('node-gtts')('nl')
-			const ttsAu = require('node-gtts')('en-au')
+            const ttsAu = require('node-gtts')('en-au')
             const ttsUk = require('node-gtts')('en-uk')
-			const ttsUs = require('node-gtts')('en-us')
-			const ttsEo = require('node-gtts')('eo')
-			const ttsFi = require('node-gtts')('fi')
-			const ttsFr = require('node-gtts')('fr')
-			const ttsEl = require('node-gtts')('el')
-			const ttsHt = require('node-gtts')('ht')
+	    const ttsUs = require('node-gtts')('en-us')
+            const ttsEo = require('node-gtts')('eo')
+	    const ttsFi = require('node-gtts')('fi')
+	    const ttsFr = require('node-gtts')('fr')
+            const ttsEl = require('node-gtts')('el')
+	    const ttsHt = require('node-gtts')('ht')
             const ttsHi = require('node-gtts')('hi')
             const ttsHu = require('node-gtts')('hu')
 			const ttsIs = require('node-gtts')('is')
@@ -1190,7 +1196,7 @@ const ytmp3 = (teks) => {
 
 
         case 'speak':
-			const sppt = require('node-gtts')('pt-br')
+			const sppt = require('node-gtts')('Es')
 			try {
 				const spiris = await axios.get(`http://simsumi.herokuapp.com/api?text=${body.slice(7)}&lang=pt`)
 				const a = spiris.data.success
@@ -1311,7 +1317,7 @@ const ytmp3 = (teks) => {
         case 'nsfw':
        	    const isGroupOwner = sender.id === chat.groupMetadata.owner
             if (args.length !== 1) return kill.reply(from, 'Establecer habilitar o deshabilitar', id)
-			if (isGroupMsg && isGroupOwner) {
+			if (isGroupMsg) {
 				if (args[0].toLowerCase() == 'enable') {
 					nsfw_.push(chat.id)
 					fs.writeFileSync('./lib/NSFW.json', JSON.stringify(nsfw_))
@@ -1323,7 +1329,7 @@ const ytmp3 = (teks) => {
 				} else {
 					kill.reply(from, 'Establecer habilitar o deshabilitar', id)
 				}
-			} else if (isGroupMsg && isOwner) {
+			} else if (isGroupMsg) {
 				if (args[0].toLowerCase() == 'enable') {
 					nsfw_.push(chat.id)
 					fs.writeFileSync('./lib/NSFW.json', JSON.stringify(nsfw_))
@@ -1466,7 +1472,7 @@ const ytmp3 = (teks) => {
             	.then((result) => {
 				var b = JSON.parse(JSON.stringify(result.data));
 				var cewek =  b[Math.floor(Math.random() * b.length)];
-              	kill.sendFileFromUrl(from, cewek, "result.jpg", "UUUU pero que linda no? lastima que solo soy un bot:(", id)
+              	kill.sendFileFromUrl(from, cewek, "result.jpg", "UUUU pero que linda no?", id)
 			})
 			break
 
@@ -1816,7 +1822,7 @@ const ytmp3 = (teks) => {
 
 
         case 'clearall':
-            if (!isOwner) return kill.reply(from, 'Solo mi creador tiene acceso a este comando.', id)
+            if (args.length == 0) return kill.reply(from, 'Solo mi creador tiene acceso a este comando.', id)
             const allChatz = await kill.getAllChats()
             for (let dchat of allChatz) {
                 await kill.deleteChat(dchat.id)
@@ -1824,6 +1830,12 @@ const ytmp3 = (teks) => {
             kill.reply(from, 'Borré todos los chats!', id)
             break
 
+			case 'lirik':
+            if (args.length == 1) return client.reply(from, 'Kirim perintah *!lirik [optional]*, contoh *!lirik aku bukan boneka*', id)
+            const lagu = body.slice(7)
+            const lirik = await liriklagu(lagu)
+            client.reply(from, lirik, id)
+            break
 
 	    case 'add':
             if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
@@ -1938,48 +1950,24 @@ const ytmp3 = (teks) => {
 
 
         case 'promote':
-			if (isGroupMsg && isGroupAdmins) {
-				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
-				if (mentionedJidList.length == 0) return kill.reply(from, 'Olvidaste etiquetar a la persona que quieres que se convierta en administrador.', id)
-				if (mentionedJidList.length >= 2) return kill.reply(from, 'Lo siento, solo puedo disparar 1 a la vez.', id)
-				if (!groupAdmins.includes(mentionedJidList[0])) return kill.reply(from, 'Bueno, ya es administrador.', id)
-				await kill.promoteParticipant(groupId, mentionedJidList[0])
-				await kill.sendTextWithMentions(from, `Promoción de miembro común @${mentionedJidList[0]} es un administrador del grupo:)`)
-		    } else if (isGroupMsg && isOwner) {
-				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
-				if (mentionedJidList.length == 0) return kill.reply(from, 'Olvidaste etiquetar a la persona que quieres que se convierta en administrador.', id)
-				if (mentionedJidList.length >= 2) return kill.reply(from, 'Lo siento, solo puedo disparar 1 a la vez.', id)
-				if (!groupAdmins.includes(mentionedJidList[0])) return kill.reply(from, 'Bueno, ya es administrador.', id)
-				await kill.promoteParticipant(groupId, mentionedJidList[0])
-				await kill.sendTextWithMentions(from, `Promoción de miembro común @${mentionedJidList[0]} es un administrador del grupo:)`)
-			} else if (isGroupMsg) {
-				await kill.reply(from, 'Lo sentimos, solo los administradores pueden usar este comando...', id)
-			} else {
-				await kill.reply(from, 'Este comando solo puede ser usado en grupos!', id)
-			}
+            if (!isGroupMsg) return client.reply(from, 'Esta función solo se puede utilizar en grupos', id)
+            if (!isGroupAdmins) return client.reply(from, 'Esta función solo puede ser utilizada por administradores de grupo', id)
+            if (!isBotGroupAdmins) return client.reply(from, 'Esta función solo se puede utilizar cuando el bot es un administrador', id)
+            if (mentionedJidList.length === 0) return client.reply(from, 'Para utilizar esta función, envíe el comando */Promote* @tagmember', id)
+            if (mentionedJidList.length >= 2) return client.reply(from, 'Lo sentimos, este comando solo se puede aplicar a 1 usuario.', id)
+            if (groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Lo sentimos, el usuario ya es administrador.', id)
+            await client.promoteParticipant(groupId, mentionedJidList[0])
+            await client.sendTextWithMentions(from, `Perfecto XD Ahora @${mentionedJidList[0]} Es Admin.`)
             break
-
-
         case 'demote':
-			if (isGroupMsg && isGroupAdmins) {
-				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
-				if (mentionedJidList.length == 0) return kill.reply(from, 'Olvidaste etiquetar a la persona que quieres despedir.', id)
-				if (mentionedJidList.length >= 2) return kill.reply(from, 'Lo siento, solo puedo disparar 1 a la vez.', id)
-				if (!groupAdmins.includes(mentionedJidList[0])) return kill.reply(from, 'Bueno, no es administrador.', id)
-				await kill.demoteParticipant(groupId, mentionedJidList[0])
-				await kill.sendTextWithMentions(from, `Jefe de grupo despido @${mentionedJidList[0]}.`)
-		    } else if (isGroupMsg && isOwner) {
-				if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
-				if (mentionedJidList.length == 0) return kill.reply(from, 'Olvidaste etiquetar a la persona que quieres despedir.', id)
-				if (mentionedJidList.length >= 2) return kill.reply(from, 'Lo siento, solo puedo disparar 1 a la vez.', id)
-				if (!groupAdmins.includes(mentionedJidList[0])) return kill.reply(from, 'Bueno, no es administrador.', id)
-				await kill.sendTextWithMentions(from, `Jefe de grupo despido @${mentionedJidList[0]}.`)
-				await kill.demoteParticipant(groupId, mentionedJidList[0])
-			} else if (isGroupMsg) {
-				await kill.reply(from, 'Lo sentimos, solo los administradores pueden despedir por Iris.', id)
-			} else {
-				await kill.reply(from, 'Este comando solo se puede usar en grupos!', id)
-			}
+            if (!isGroupMsg) return client.reply(from, 'Esta función solo se puede utilizar en grupos', id)
+            if (!isGroupAdmins) return client.reply(from, 'Esta función solo puede ser utilizada por administradores de grupo', id)
+            if (!isBotGroupAdmins) return client.reply(from, 'Esta función solo se puede utilizar cuando el bot es un administrador', id)
+            if (mentionedJidList.length === 0) return client.reply(from, 'Para utilizar esta función, envíe el comando *!demote* @tagadmin', id)
+            if (mentionedJidList.length >= 2) return client.reply(from, 'Lo sentimos, este comando solo se puede aplicar a 1 persona.', id)
+            if (!groupAdmins.includes(mentionedJidList[0])) return client.reply(from, 'Lo sentimos, el usuario no es administrador.', id)
+            await client.demoteParticipant(groupId, mentionedJidList[0])
+            await client.sendTextWithMentions(from, `Perfecto, se le quito Admin a @${mentionedJidList[0]}.`)
             break
 
 
