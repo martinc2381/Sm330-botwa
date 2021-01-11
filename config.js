@@ -98,13 +98,21 @@ module.exports = kconfig = async (kill, message) => {
 				Kl: '¡Ups! Ese es solo mi creador, no puedes acceder.',
 				Ga: 'Solo los administradores pueden usarlo, así que chaoo jaja!',
 				Gp: 'Lo siento, pero este es un comando para grupos.🕳💦.',
-				Ac: 'Solo los grupos que permiten contenido +18 pueden usar comandos como este, si usted es el propietario y desea esto, use /nsfw enable o use en PV.',
+				Ac: 'Solo los grupos que permiten contenido +18 pueden usar comandos como este, si usted es el propietario y desea esto, use /nsfw enable o use en PRIV.',
 				Ba: 'Estimado administrador, si desea que use estos comandos, debe permitirme ser miembro😙!',
                 Iv: '¿Este enlace es correcto? Me parece mal...'
             }
         }
 	
 
+	case 'Anonymod':
+    await kill.reply(from, '', id)
+    break
+	
+	    case 'samu330':
+    await kill.reply(from, 'Hola!😀\n\nTe gustaria apoyarme?\n\nSolo unete a mi grupo de WhatsApp: https://chat.whatsapp.com/ELeHAmX3P6j1xy1qNRjEXR\n\nO puedes suscribirte a mi canal para saber como instalar un Bot: https://www.youtube.com/channel/UCqPXxG2ZdDe_ugOqMHDRMqg\n\nO seamos amigos en facebook: https://facebook.com/tupapi.samu330', id)
+    break
+	
 		// ANTI GRUPOS && ANTI PORNO
         if (isGroupMsg && isLeg && !isGroupAdmins && !isOwner){
             if (chats.match(/(https?:\/\/chat.whatsapp.com)/gi)) {
