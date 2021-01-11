@@ -731,6 +731,29 @@ module.exports = kconfig = async (kill, message) => {
 					await kill.sendFileFromUrl(from, m3tu, '', `Titulo: ${m3ti}\nFormato:${m3fo}\n\nEspero haberlo hecho bien y ... ¡ahora solo espera! Pero evita usar de nuevo hasta que termine eh!`, id)
 					await kill.sendFileFromUrl(from, m3pa, '', '', id)
                 })
+			  
+const axios = require("axios")
+const imageToBase64 = require('image-to-base64');
+
+const ytmp3 = (teks) => {
+    return new Promise((resolve, reject) => {
+        if (typeof teks === 'undefined') { reject('masukan teks link.') }
+        var url = 'https://st4rz.herokuapp.com/api/yta2?url=' + teks
+        axios.get(url)
+            .then(res => {
+                imageToBase64(res.data.thumb)
+                    .then(data => {
+                        var buffer = Buffer.from(data, 'base64')
+                        resolve(buffer)
+                    })
+            })
+            .catch(err => {
+                reject('sepertinya error.')
+            })
+    })
+}
+
+module.exports = 
 			break
 
 
@@ -1231,7 +1254,7 @@ module.exports = kconfig = async (kill, message) => {
 
         case 'criador':
             kill.sendContact(from, 'wa.me/+529984907794')
-			kill.reply(from, 'Si no responde, solo espera, es raro que deje Internet ~ Smitten guy sabe ~, pero si sucedió, fue algo importante..', id)
+			kill.reply(from, 'Si no responde, solo espera, es raro que deje Internet ~Smitten guy sabe~, pero si sucedió, fue algo importante..', id)
             break
 
 
@@ -1315,7 +1338,6 @@ module.exports = kconfig = async (kill, message) => {
 
         case 'welcome':
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
-			if (!isOwner) return kill.reply(from, mess.error.Kl, id)
             if (args.length !== 1) return kill.reply(from, 'Olvidaste ponerlo (ON) o quitarlo [off].', id)
 			if (args[0] == 'on') {
                 welkom.push(chat.id)
@@ -2000,7 +2022,7 @@ module.exports = kconfig = async (kill, message) => {
 
 
         case 'tela':
-            if (!isOwner) return kill.reply(from, 'Este comando es solo para mi creador', id)
+           
             const sesPic = await kill.getSnapshot()
             kill.sendFile(from, sesPic, 'session.png', 'Neh...', id)
             break
@@ -2024,7 +2046,7 @@ module.exports = kconfig = async (kill, message) => {
 
 
         case 'blocks':
-            if (!isOwner) return kill.reply(from, 'Solo mi creador tiene acceso a este comando.', id)
+            
             let hih = `Lista de bloqueados\nTotal : ${blockNumber.length}\n`
             for (let i of blockNumber) {
                 hih += `➸ @${i.replace(/@c.us/g,'')}\n`
@@ -2034,7 +2056,7 @@ module.exports = kconfig = async (kill, message) => {
 			
 			
         case 'encerrar':
-            if (!isOwner) return kill.reply(from, 'Solo mi creador tiene acceso a este comando.', id)
+            
 			kill.reply(from, 'Solicitud recibida!\nMe apagaré en 5 segundos.', id)
 		    await sleep(5000)
 			await kill.kill()
@@ -2066,7 +2088,7 @@ module.exports = kconfig = async (kill, message) => {
 			
         case 'exclusive':
             if (!isGroupMsg) return kill.reply(from, 'Solo grupos!', id)
-			if (!isOwner) return kill.reply(from, 'Este comando es solo para mi creador', id)
+			
             if (args.length !== 1) return kill.reply(from, 'Establecer entre encendido y apagado!', id)
 			if (args[0] == 'on') {
                 exsv.push(chatId)
@@ -2694,7 +2716,7 @@ module.exports = kconfig = async (kill, message) => {
 
         case 'menu':
 			const timed = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
-			const allin = `Olá usuário "@${sender.id}"!\n\nLevei ${processTime(t, moment())} segundos para te responder.\n\nAgora são exatas "${timed}".\nAbaixo estão minhas funções.\n`
+			const allin = `Hola usuario "@${sender.id}"!\n\nMe lleve ${processTime(t, moment())} segundos para responder.\n\nAhora son exactamente "${timed}".\nAqui abajito estan todas mis funciones.\n`
             kill.sendTextWithMentions(from, allin + help, id)
             kill.reply(from, '💢De otros comandos tenemos...\n\n*/Admins* _❌es para administradores._\n\n*/Kill* _🖤🖤es solo para mi dueño._\n\n*/Adult* _🍆🍆es el menú de comandos para adultos😈._\n\n*/Down* _⚠es el menú de descarga de música y video._', id)
             break
@@ -2713,7 +2735,7 @@ module.exports = kconfig = async (kill, message) => {
 			
 
         case 'kill':
-            if (!isOwner) return kill.reply(from, mess.error.Kl, id)
+            
             kill.sendText(from, owner, id)
             break
 
