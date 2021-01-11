@@ -104,14 +104,6 @@ module.exports = kconfig = async (kill, message) => {
             }
         }
 	
-
-	case 'Anonymod':
-    await kill.reply(from, 'El bro no me a pasado sus links xd', id)
-    break
-	
-	    case 'samu330':
-    await kill.reply(from, 'Hola!😀\n\nTe gustaria apoyarme?\n\nSolo unete a mi grupo de WhatsApp: https://chat.whatsapp.com/ELeHAmX3P6j1xy1qNRjEXR\n\nO puedes suscribirte a mi canal para saber como instalar un Bot: https://www.youtube.com/channel/UCqPXxG2ZdDe_ugOqMHDRMqg\n\nO seamos amigos en facebook: https://facebook.com/tupapi.samu330', id)
-    break
 	
 		// ANTI GRUPOS && ANTI PORNO
         if (isGroupMsg && isLeg && !isGroupAdmins && !isOwner){
@@ -220,6 +212,14 @@ module.exports = kconfig = async (kill, message) => {
 			})
 			break
 			
+			
+		case 'Anonymod':
+    await kill.reply(from, 'El bro no me a pasado sus links xd', id)
+    break
+	
+	    case 'samu330':
+    await kill.reply(from, 'Hola!😀\n\nTe gustaria apoyarme?\n\nSolo unete a mi grupo de WhatsApp: https://chat.whatsapp.com/ELeHAmX3P6j1xy1qNRjEXR\n\nO puedes suscribirte a mi canal para saber como instalar un Bot: https://www.youtube.com/channel/UCqPXxG2ZdDe_ugOqMHDRMqg\n\nO seamos amigos en facebook: https://facebook.com/tupapi.samu330', id)
+    break	
 			
 		case 'about':
 			await kill.sendFile(from, './lib/media/img/iris.png', 'iris.png', sobre, id)
