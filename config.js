@@ -205,7 +205,7 @@ module.exports = kconfig = async (kill, message) => {
 			
 
 		case 'ttp':
-			if (args.length == 0) return kill.reply(from, 'Cadê a frase né?', id)
+			if (args.length == 0) return kill.reply(from, '¿Dónde está la frase?', id)
 			axios.get(`https://st4rz.herokuapp.com/api/ttp?kata=${body.slice(5)}`)
 			.then(res => {
 				kill.sendImageAsSticker(from, res.data.result)
@@ -213,8 +213,8 @@ module.exports = kconfig = async (kill, message) => {
 			break
 			
 			
-		case 'Anonymod':
-    await kill.reply(from, 'El bro no me a pasado sus links xd', id)
+		case 'anonymod':
+    await kill.reply(from, 'Algunos videos del canal de mi bro DEIVID\n\nWhatsApp ANONYMOUS V.06 oFc 100% inmune\n\nhttps://youtu.be/tOE_ywldS_Q\n\nComo modificar un WA prt-1\n\nhttps://youtu.be/WdWsvY3xGPc\n\nWhAtsApp BusSines Golden/13\n\nhttps://youtu.be/JqSHAWlGhDY\n\nNumero virtual +48 método efectivo\n\nhttps://youtu.be/7GOss7AaJ88\n\nNumero virtual +1 EE.Uu (ANONYMOUS DEIVID)\n\nhttps://youtu.be/D1G6hI1mLs4\n\nCreando con pixelLab (ANONYMOUS DEIVID)\n\nhttps://youtu.be/so1y1g-MPZ4\n\nEspero y lo apoyes🤗', id)
     break
 	
 	    case 'samu330':
@@ -227,7 +227,7 @@ module.exports = kconfig = async (kill, message) => {
 
 			
         case 'stickernobg':
-			if (isMedia) {
+		 if (isMedia) {
                 try {
                     var mediaData = await decryptMedia(message, uaOverride)
                     var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
@@ -243,44 +243,22 @@ module.exports = kconfig = async (kill, message) => {
             }
             break
 
-
         case 'stickergif':
         case 'stikergif':
         case 'gif':
             if (isMedia) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
-                    var mediaData = await decryptMedia(message, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
+                    const mediaData = await decryptMedia(message, uaOverride)
+                    client.reply(from, '[WAIT] El proceso puede demorar⏳ mas o menos ± 1 min!', id)
+                    const filename = `./media/aswu.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/output.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Aff! La conversión tiene errores, tal vez sea el tamaño del gif o su peso.', id)
-                        })
+                        const gif = await fs.readFileSync('./media/output.gif', { encoding: "base64" })
+                        await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                     })
-                } else {
-                    kill.reply(from, `Si recibe esto, considere 2 razones.\n\n1 - Esto no es un gif o video.\n\n2 - El gif o video dura más de 15 segundos, excediendo el límite que puedo convertir`, id)
-                }
-            } else if (quotedMsg) {
-                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
-                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=15 --scale=256:256`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Aff! La conversión tiene errores, tal vez sea el tamaño del gif o su peso.', id)
-                        })
-                    })
-                } else {
-                    kill.reply(from, `Si recibe esto, considere 2 razones.\n\n1 - Esto no es un gif o video.\n\n2 - El gif o video dura más de 15 segundos, excediendo el límite que puedo convertir.`, id)
-                }
-			} else {
-                kill.reply(from, mess.error.St, id)
+                } else (
+                    client.reply(from, '[❗] Quiere video con leyenda? *!stickerGif* max 10 sec!', id)
+                )
             }
             break
 	
@@ -728,44 +706,31 @@ module.exports = kconfig = async (kill, message) => {
 
 
          case 'mp3': // eu censurei o acesso pois as apis estão offlines, e fazer isso evita que usem o comando e te de problemas
-            if (args.length == 0) return kill.reply(from, 'Lo usaste incorrectamente.', id)
-            axios.get(`http://st4rz.herokuapp.com/api/yta2?url=${body.slice(5)}`)
-            .then(async(rest) => {
-					var m3pa = rest.data.result
-					var m3ti = rest.data.title
-					var m3tu = rest.data.thumb
-					var m3fo = rest.data.ext
-					await kill.sendFileFromUrl(from, m3tu, '', `Titulo: ${m3ti}\nFormato:${m3fo}\n\nEspero haberlo hecho bien y ... ¡ahora solo espera! Pero evita usar de nuevo hasta que termine eh!`, id)
-					await kill.sendFileFromUrl(from, m3pa, '', '', id)
-                })
-			  
-const axios = require("axios")
-const imageToBase64 = require('image-to-base64');
-
-const ytmp3 = (teks) => {
-    return new Promise((resolve, reject) => {
-        if (typeof teks === 'undefined') { reject('masukan teks link.') }
-        var url = 'https://st4rz.herokuapp.com/api/yta2?url=' + teks
-        axios.get(url)
-            .then(res => {
-                imageToBase64(res.data.thumb)
-                    .then(data => {
-                        var buffer = Buffer.from(data, 'base64')
-                        resolve(buffer)
-                    })
-            })
-            .catch(err => {
-                reject('sepertinya error.')
-            })
-    })
-}
-
-			break
+             if (args.length === 0) return client.reply(from, 'Envie el comando junto con el link de YouTube')
+            let isLinks = args[0].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
+            if (!isLinks) return client.reply(from, mess.error.Iv, id)
+            try {
+                client.reply(from, mess.wait, id)
+                const resp = await get.get(`https://mhankbarbars.herokuapp.com/api/yta?url=${args[1]}&apiKey=${apiKey}`).json()
+                if (resp.error) {
+                    client.reply(from, resp.error, id)
+                } else {
+                    const { title, thumb, filesize, result } = await resp
+                    if (Number(filesize.split(' MB')[0]) >= 30.00) return client.reply(from, 'Lo sentimos, la duración del video superó el límite máximo!', id)
+                    client.sendFileFromUrl(from, thumb, 'thumb.jpg', `➸ *Title* : ${title}\n➸ *Filesize* : ${filesize}\n\nEspere un momento a que el proceso de envío del archivo se complete.`, id)
+                    await client.sendFileFromUrl(from, result, `${title}.mp3`, '', id).catch(() => client.reply(from, mess.error.Yt3, id))
+                    //await client.sendAudio(from, result, id)
+                }
+            } catch (err) {
+                client.sendText(ownerNumber[0], 'Error ytmp3 : '+ err)
+                client.reply(from, mess.error.Yt3, id)
+            }
+            break
 
 
         case 'mp4':
-            if (args.length === 0) return client.reply(from, 'Pege el link de YouTube despues del comando')
-            let isLin = args[1].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
+           if (args.length === 0) return client.reply(from, 'Envie el comando junto con el link de YouTube')
+            let isLin = args[0].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
             if (!isLin) return client.reply(from, mess.error.Iv, id)
             try {
                 client.reply(from, mess.wait, id)
@@ -773,8 +738,8 @@ const ytmp3 = (teks) => {
                 if (ytv.error) {
                     client.reply(from, ytv.error, id)
                 } else {
-                    if (Number(ytv.filesize.split(' MB')[0]) > 40.00) return client.reply(from, 'Maaf durasi video sudah melebihi batas maksimal!', id)
-                    client.sendFileFromUrl(from, ytv.thumb, 'thumb.jpg', `➸ *Title* : ${ytv.title}\n➸ *Filesize* : ${ytv.filesize}\n\nEspere un momento a que el proceso de envío del archivo termine, esto puede tardar:)`, id)
+                    if (Number(ytv.filesize.split(' MB')[0]) > 40.00) return client.reply(from, 'Lo sentimos, la duración del video superó el límite máximo!', id)
+                    client.sendFileFromUrl(from, ytv.thumb, 'thumb.jpg', `➸ *Title* : ${ytv.title}\n➸ *Filesize* : ${ytv.filesize}\n\nEspere un momento a que el proceso de envío del archivo se complete.`, id)
                     await client.sendFileFromUrl(from, ytv.result, `${ytv.title}.mp4`, '', id).catch(() => client.reply(from, mess.error.Yt4, id))
                 }
             } catch (er) {
@@ -921,267 +886,35 @@ const ytmp3 = (teks) => {
 
 
         case 'tts': // Esse é enormeeeee, fazer o que, sou baiano pra jogar noutro js
-            if (args.length == 1) return kill.reply(from, 'Comprensible, pero no utilizable, olvidó definir el idioma y la frase.')
+            if (args.length === 0) return client.reply(from, 'Enviar comado *!tts [id, en, jp, ar] [texto], *ejemplo!* *tts id hola samu*')
             const ttsId = require('node-gtts')('id')
             const ttsEn = require('node-gtts')('en')
 	    const ttsJp = require('node-gtts')('ja')
             const ttsAr = require('node-gtts')('ar')
-            const ttsAf = require('node-gtts')('af')
-            const ttsSq = require('node-gtts')('sq')
-            const ttsHy = require('node-gtts')('hy')
-            const ttsCa = require('node-gtts')('ca')
-            const ttsZh = require('node-gtts')('zh')
-	    const ttsCn = require('node-gtts')('zh-cn')
-	    const ttsTw = require('node-gtts')('zh-tw')
-	    const ttsYu = require('node-gtts')('zh-yue')
-	    const ttsHr = require('node-gtts')('hr')
-            const ttsCs = require('node-gtts')('cs')
-            const ttsDa = require('node-gtts')('da')
-            const ttsNl = require('node-gtts')('nl')
-            const ttsAu = require('node-gtts')('en-au')
-            const ttsUk = require('node-gtts')('en-uk')
-	    const ttsUs = require('node-gtts')('en-us')
-            const ttsEo = require('node-gtts')('eo')
-	    const ttsFi = require('node-gtts')('fi')
-	    const ttsFr = require('node-gtts')('fr')
-            const ttsEl = require('node-gtts')('el')
-	    const ttsHt = require('node-gtts')('ht')
-            const ttsHi = require('node-gtts')('hi')
-            const ttsHu = require('node-gtts')('hu')
-			const ttsIs = require('node-gtts')('is')
-            const ttsIt = require('node-gtts')('it')
-            const ttsKo = require('node-gtts')('ko')
-            const ttsLa = require('node-gtts')('la')
-			const ttsLv = require('node-gtts')('lv')
-            const ttsMk = require('node-gtts')('mk')
-			const ttsNo = require('node-gtts')('no')
-			const ttsPl = require('node-gtts')('pl')
-			const ttsRo = require('node-gtts')('ro')
-			const ttsSr = require('node-gtts')('sr')
-			const ttsSk = require('node-gtts')('sk')
-			const ttsEs = require('node-gtts')('es')
-            const ttsSp = require('node-gtts')('es-es')
-            const ttsSu = require('node-gtts')('es-us')
-			const ttsSw = require('node-gtts')('sw')
-            const ttsSv = require('node-gtts')('sv')
-			const ttsTa = require('node-gtts')('ta')
-			const ttsTh = require('node-gtts')('th')
-			const ttsTr = require('node-gtts')('tr')
-			const ttsVi = require('node-gtts')('vi')
-			const ttsCy = require('node-gtts')('cy')
-            const ttsDe = require('node-gtts')('de')
-            const ttsBr = require('node-gtts')('pt-br')
-			const ttsPt = require('node-gtts')('pt')
-            const ttsRu = require('node-gtts')('ru')
             const dataText = body.slice(8)
-            if (dataText === '') return kill.reply(from, '¡Ahora tenemos un baka! Olvidaste poner la frase para hablar.', id)
-            if (dataText.length > 500) return kill.reply(from, 'Lo siento, pero el límite es de 500 letras....', id)
+            if (dataText === '') return client.reply(from, 'Baka?', id)
+            if (dataText.length > 500) return client.reply(from, 'Teks terlalu panjang!', id)
             var dataBhs = body.slice(5, 7)
-			if (dataBhs == 'id') {
-                ttsId.save('./lib/media/tts/resId.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resId.mp3', id)
+	        if (dataBhs == 'id') {
+                ttsId.save('./media/tts/resId.mp3', dataText, function () {
+                    client.sendPtt(from, './media/tts/resId.mp3', id)
                 })
             } else if (dataBhs == 'en') {
-                ttsEn.save('./lib/media/tts/resEn.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resEn.mp3', id)
+                ttsEn.save('./media/tts/resEn.mp3', dataText, function () {
+                    client.sendPtt(from, './media/tts/resEn.mp3', id)
                 })
             } else if (dataBhs == 'jp') {
-                ttsJp.save('./lib/media/tts/resJp.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resJp.mp3', id)
+                ttsJp.save('./media/tts/resJp.mp3', dataText, function () {
+                    client.sendPtt(from, './media/tts/resJp.mp3', id)
                 })
-            } else if (dataBhs == 'de') {
-                ttsDe.save('./lib/media/tts/resDe.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resDe.mp3', id)
-                })
-            } else if (dataBhs == 'br') {
-                ttsBr.save('./lib/media/tts/resBr.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resBr.mp3', id)
-                })
-            } else if (dataBhs == 'ru') {
-                ttsRu.save('./lib/media/tts/resRu.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resRu.mp3', id)
-                })
-			} else if (dataBhs == 'ar') {
-                ttsAr.save('./lib/media/tts/resAr.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resAr.mp3', id)
-                })
-            } else if (dataBhs == 'pt') {
-                ttsPt.save('./lib/media/tts/resPt.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resPt.mp3', id)
-                })
-            } else if (dataBhs == 'af') {
-                ttsAf.save('./lib/media/tts/resAf.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resAf.mp3', id)
-                })
-            } else if (dataBhs == 'sq') {
-                ttsSq.save('./lib/media/tts/resSq.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSq.mp3', id)
-                })
-            } else if (dataBhs == 'hy') {
-                ttsHy.save('./lib/media/tts/resHy.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resHy.mp3', id)
-                })
-            } else if (dataBhs == 'ca') {
-                ttsCa.save('./lib/media/tts/resCa.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resCa.mp3', id)
-                })
-            } else if (dataBhs == 'zh') {
-                ttsZh.save('./lib/media/tts/resZh.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resZh.mp3', id)
-                })		
-            } else if (dataBhs == 'cn') {
-                ttsCn.save('./lib/media/tts/resCn.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resCn.mp3', id)
-                })
-            } else if (dataBhs == 'tw') {
-                ttsTw.save('./lib/media/tts/resTw.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resTw.mp3', id)
-                })
-            } else if (dataBhs == 'yu') {
-                ttsYu.save('./lib/media/tts/resYue.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resYue.mp3', id)
-                })
-			} else if (dataBhs == 'hr') {
-                ttsHr.save('./lib/media/tts/resHr.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resHr.mp3', id)
-                })
-            } else if (dataBhs == 'cs') {
-                ttsCs.save('./lib/media/tts/resCs.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resCs.mp3', id)
-                })
-            } else if (dataBhs == 'da') {
-                ttsDa.save('./lib/media/tts/resDa.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resDa.mp3', id)
-                })
-            } else if (dataBhs == 'nl') {
-                ttsNl.save('./lib/media/tts/resNl.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resNl.mp3', id)
-                })
-            } else if (dataBhs == 'au') {
-                ttsAu.save('./lib/media/tts/resAu.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resAu.mp3', id)
-                })
-            } else if (dataBhs == 'uk') {
-                ttsUk.save('./lib/media/tts/resUk.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resUk.mp3', id)
-                })
-            } else if (dataBhs == 'us') {
-                ttsUs.save('./lib/media/tts/resUs.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resUs.mp3', id)
-                })
-            } else if (dataBhs == 'eo') {
-                ttsEo.save('./lib/media/tts/resEo.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resEo.mp3', id)
-                })
-            } else if (dataBhs == 'fi') {
-                ttsFi.save('./lib/media/tts/resFi.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resFi.mp3', id)
-                })
-            } else if (dataBhs == 'fr') {
-                ttsFr.save('./lib/media/tts/resFr.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resFr.mp3', id)
-                })
-            } else if (dataBhs == 'el') {
-                ttsEl.save('./lib/media/tts/resEl.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resEl.mp3', id)
-                })
-            } else if (dataBhs == 'ht') {
-                ttsHt.save('./lib/media/tts/resJp.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resHt.mp3', id)
-                })
-            } else if (dataBhs == 'hi') {
-                ttsHi.save('./lib/media/tts/resHi.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resHi.mp3', id)
-                })
-            } else if (dataBhs == 'hu') {
-                ttsHu.save('./lib/media/tts/resHu.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resHu.mp3', id)
-                })
-            } else if (dataBhs == 'is') {
-                ttsIs.save('./lib/media/tts/resIs.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resIs.mp3', id)
-                })
-			} else if (dataBhs == 'it') {
-                ttsIt.save('./lib/media/tts/resIt.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resIt.mp3', id)
-                })
-            } else if (dataBhs == 'ko') {
-                ttsKo.save('./lib/media/tts/resKo.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resKo.mp3', id)
-                })
-            } else if (dataBhs == 'la') {
-                ttsLa.save('./lib/media/tts/resLa.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resLa.mp3', id)
-                })
-            } else if (dataBhs == 'lv') {
-                ttsLv.save('./lib/media/tts/resLv.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resLv.mp3', id)
-                })
-            } else if (dataBhs == 'mk') {
-                ttsMk.save('./lib/media/tts/resMk.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resMk.mp3', id)
-                })
-            } else if (dataBhs == 'no') {
-                ttsNo.save('./lib/media/tts/resNo.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resNo.mp3', id)
-                })
-            } else if (dataBhs == 'pl') {
-                ttsPl.save('./lib/media/tts/resPl.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resPl.mp3', id)
-                })		
-            } else if (dataBhs == 'ro') {
-                ttsRo.save('./lib/media/tts/resRo.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resRo.mp3', id)
-                })
-            } else if (dataBhs == 'sr') {
-                ttsSr.save('./lib/media/tts/resSr.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSr.mp3', id)
-                })
-            } else if (dataBhs == 'sk') {
-                ttsSk.save('./lib/media/tts/resSk.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSk.mp3', id)
-                })
-			} else if (dataBhs == 'es') {
-                ttsEs.save('./lib/media/tts/resEs.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resEs.mp3', id)
-                })
-            } else if (dataBhs == 'sp') {
-                ttsSp.save('./lib/media/tts/resSp.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSp.mp3', id)
-                })
-            } else if (dataBhs == 'su') {
-                ttsSu.save('./lib/media/tts/resSu.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSu.mp3', id)
-                })
-            } else if (dataBhs == 'sw') {
-                ttsSw.save('./lib/media/tts/resSw.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSk.mp3', id)
-                })
-            } else if (dataBhs == 'sv') {
-                ttsSv.save('./lib/media/tts/resSv.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resSv.mp3', id)
-                })
-            } else if (dataBhs == 'ta') {
-                ttsTa.save('./lib/media/tts/resTa.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resTa.mp3', id)
-                })
-            } else if (dataBhs == 'tr') {
-                ttsTr.save('./lib/media/tts/resTr.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resTr.mp3', id)
-                })
-            } else if (dataBhs == 'vi') {
-                ttsVi.save('./lib/media/tts/resVi.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resVi.mp3', id)
-                })
-            } else if (dataBhs == 'cy') {
-                ttsCy.save('./lib/media/tts/resCy.mp3', dataText, function () {
-                    kill.sendPtt(from, './lib/media/tts/resCy.mp3', id)
+	    } else if (dataBhs == 'ar') {
+                ttsAr.save('./media/tts/resAr.mp3', dataText, function () {
+                    client.sendPtt(from, './media/tts/resAr.mp3', id)
                 })
             } else {
-                kill.reply(from, `Hmm, '${body.slice(5, 7)}' no es un idioma compatible, para el tipo de idiomas compatibles escriba: /idiomas.`, id)
+                client.reply(from, 'Masukkan data bahasa : [id] untuk indonesia, [en] untuk inggris, [jp] untuk jepang, dan [ar] untuk arab', id)
             }
             break
-
 
         case 'idiomas':
             kill.sendText(from, lang, id)
@@ -1261,7 +994,7 @@ const ytmp3 = (teks) => {
 
 
         case 'ping':
-            kill.sendText(from, `Pong!\n_Minha velocidade é de ${processTime(t, moment())} segundos._`)
+            kill.sendText(from, `Pong!xd\n_Mi velocidad de respuesta es de ${processTime(t, moment())} segundos._`)
             break
 
 
@@ -1838,14 +1571,15 @@ const ytmp3 = (teks) => {
             break
 
 	    case 'add':
-            if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
-            if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
-	        if (args.length !== 1) return kill.reply(from, 'Debes especificar el número de teléfono.', id)
-                try {
-                    await kill.addParticipant(from,`${args[0]}@c.us`)
-                } catch {
-                    kill.reply(from, mess.error.Ad, id)
-                }
+            if (!isGroupMsg) return client.reply(from, 'Esta función solo se puede utilizar en grupos', id)
+            if (args.length === 1) return client.reply(from, 'Para utilizar esta función, envíe el comando */Add* +52xxxxx', id)
+            if (!isGroupAdmins) return client.reply(from, 'Este comando solo puede ser utilizado por administradores de grupo', id)
+            if (!isBotGroupAdmins) return client.reply(from, 'Este comando solo se puede usar cuando el bot se convierte en administrador', id)
+            try {
+                await client.addParticipant(from,`${orang}@c.us`)
+            } catch {
+                client.reply(from, mess.error.Ad, id)
+            }
             break
 			
 			
@@ -1999,20 +1733,11 @@ const ytmp3 = (teks) => {
 
         case 'delete':
         case 'del':
-			if (isGroupMsg && isGroupAdmins) {
-				if (!quotedMsg) return kill.reply(from, 'Necesitas marcar el mensaje que quieres borrar, obviamente, uno de los míos.', id)
-				if (!quotedMsgObj.fromMe) return kill.reply(from, 'Solo puedo borrar mis mensajes!', id)
-				await kill.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
-		    } else if (isGroupMsg && isOwner) {
-				if (!quotedMsg) return kill.reply(from, 'Necesitas marcar el mensaje que quieres borrar, obviamente, uno de los míos.', id)
-				if (!quotedMsgObj.fromMe) return kill.reply(from, 'Solo puedo borrar mis mensajes!', id)
-				await kill.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
-			} else if (isGroupMsg) {
-				if (!quotedMsgObj.fromMe) return kill.reply(from, 'Solo puedo borrar mis mensajes!', id)
-				await kill.reply(from, 'Lo siento, solo mi propietario y los administradores pueden eliminar mis mensajes.', id)
-			} else {
-				await kill.reply(from, 'Este comando solo se puede usar en grupos!', id)
-			}
+			if (!isGroupMsg) return client.reply(from, 'Esta función solo se puede utilizar en grupos', id)
+            if (!isGroupAdmins) return client.reply(from, 'Esta función solo puede ser utilizada por administradores de grupo', id)
+            if (!quotedMsg) return client.reply(from, '¡¡Incorrecto !!, enviar comando */del [tagmsgbot]*', id)
+            if (!quotedMsgObj.fromMe) return client.reply(from, '¡¡Incorrecto !!, los Bots no pueden borrar los chats de otros usuarios!', id)
+            client.deleteMessage(quotedMsgObj.chatId, quotedMsgObj.id, false)
             break
 
 
