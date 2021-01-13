@@ -163,59 +163,7 @@ module.exports = kconfig = async (kill, message) => {
 
         switch(command) {
 
-            case 'antisticker':
-            case 'antistiker':
-                    if (!isGroupMsg) return aruga.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
-                    if (!isGroupAdmins) return aruga.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
-                    if (args[0] == 'on') {
-                        var cek = antisticker.includes(chatId);
-                        if(cek){
-                            return aruga.reply(from, '*Anti Spam Sticker Detector* ya activo en este grupo', id) //if number already exists on database
-                        } else {
-                            antisticker.push(chatId)
-                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
-                            aruga.reply(from, '*[Anti Sticker SPAM]* Ha sido activado\nCada miembro del grupo que aga spam de stickers más de 7 será expulsado por el bot!', id)
-                        }
-                    } else if (args[0] == 'off') {
-                        var cek = antilink.includes(chatId);
-                        if(cek){
-                            return aruga.reply(from, '*Anti Spam Sticker Detector* ya está inactivo en este grupo', id) //if number already exists on database
-                        } else {
-                            let nixx = antisticker.indexOf(chatId)
-                            antisticker.splice(nixx, 1)
-                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
-                            aruga.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
-                        }
-                    } else {
-                        aruga.reply(from, `Establesca on / off\n\n*[Anti Sticker SPAM]*\nCada miembro del grupo que use un sticker como spam será expulsado por el bot!`, id)
-                    }
-                    break
-                    case 'antilink':
-                    if (!isGroupMsg) return aruga.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
-                    if (!isGroupAdmins) return aruga.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
-                    if (args[0] == 'on') {
-                        var cek = antilink.includes(chatId);
-                        if(cek){
-                            return aruga.reply(from, '*Anti Group Link Detector* ya activo en este grupo', id) //if number already exists on database
-                        } else {
-                            antilink.push(chatId)
-                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
-                            aruga.reply(from, '*[Anti Group Link]* Ha sido activado\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!', id)
-                        }
-                    } else if (args[0] == 'off') {
-                        var cek = antilink.includes(chatId);
-                        if(!cek){
-                            return aruga.reply(from, '*Anti Group Link Detector* ya está inactivo en este grupo', id) //if number already exists on database
-                        } else {
-                            let nixx = antilink.indexOf(chatId)
-                            antilink.splice(nixx, 1)
-                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
-                            aruga.reply(from, '*[Anti Group Link]* ha sido deshabilitado\n', id)
-                        }
-                    } else {
-                        aruga.reply(from, `Establesca on / off\n\n*[Anti Group Link]*\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!`, id)
-                    }
-                    break
+           
         case 'sticker':
         case 'stiker':
             if (isMedia && type === 'image') {
@@ -307,16 +255,16 @@ module.exports = kconfig = async (kill, message) => {
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
                         var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
-                        await aruga.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                         .catch(() => {
-                            aruga.reply(from, 'Lo siento, el archivo es demasiado grande!', id)
+                            kill.reply(from, 'Lo siento, el archivo es demasiado grande!', id)
                         })
                     })
                   } else {
-                    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif* max 10 sec!`, id)
+                    kill.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif* max 10 sec!`, id)
                    }
                 } else {
-		    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif*`, id)
+		    kill.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif*`, id)
 	        }
             break
 	
@@ -342,6 +290,61 @@ module.exports = kconfig = async (kill, message) => {
 			}
 			break
 
+		     case 'antisticker':
+            case 'antistiker':
+                    if (!isGroupMsg) return aruga.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
+                    if (!isGroupAdmins) return aruga.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
+                    if (args[0] == 'on') {
+                        var cek = antisticker.includes(chatId);
+                        if(cek){
+                            return kill.reply(from, '*Anti Spam Sticker Detector* ya activo en este grupo', id) //if number already exists on database
+                        } else {
+                            antisticker.push(chatId)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            kill.reply(from, '*[Anti Sticker SPAM]* Ha sido activado\nCada miembro del grupo que aga spam de stickers más de 7 será expulsado por el bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return kill.reply(from, '*Anti Spam Sticker Detector* ya está inactivo en este grupo', id) //if number already exists on database
+                        } else {
+                            let nixx = antisticker.indexOf(chatId)
+                            antisticker.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            kill.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
+                        }
+                    } else {
+                        kill.reply(from, `Establesca on / off\n\n*[Anti Sticker SPAM]*\nCada miembro del grupo que use un sticker como spam será expulsado por el bot!`, id)
+                    }
+                    break
+		    
+                    case 'antilink':
+                    if (!isGroupMsg) return kill.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
+                    if (!isGroupAdmins) return kill.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
+                    if (args[0] == 'on') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return kill.reply(from, '*Anti Group Link Detector* ya activo en este grupo', id) //if number already exists on database
+                        } else {
+                            antilink.push(chatId)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            kill.reply(from, '*[Anti Group Link]* Ha sido activado\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(!cek){
+                            return kill.reply(from, '*Anti Group Link Detector* ya está inactivo en este grupo', id) //if number already exists on database
+                        } else {
+                            let nixx = antilink.indexOf(chatId)
+                            antilink.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            kill.reply(from, '*[Anti Group Link]* ha sido deshabilitado\n', id)
+                        }
+                    } else {
+                        kill.reply(from, `Establesca on / off\n\n*[Anti Group Link]*\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!`, id)
+                    }
+                    break
+		    
 		case 'upimg':
             if (isMedia && type === 'image') {
                 const mediaData = await decryptMedia(message, uaOverride)
