@@ -163,7 +163,59 @@ module.exports = kconfig = async (kill, message) => {
 
         switch(command) {
 
-
+            case 'antisticker':
+            case 'antistiker':
+                    if (!isGroupMsg) return aruga.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
+                    if (!isGroupAdmins) return aruga.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
+                    if (args[0] == 'on') {
+                        var cek = antisticker.includes(chatId);
+                        if(cek){
+                            return aruga.reply(from, '*Anti Spam Sticker Detector* ya activo en este grupo', id) //if number already exists on database
+                        } else {
+                            antisticker.push(chatId)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            aruga.reply(from, '*[Anti Sticker SPAM]* Ha sido activado\nCada miembro del grupo que aga spam de stickers más de 7 será expulsado por el bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return aruga.reply(from, '*Anti Spam Sticker Detector* ya está inactivo en este grupo', id) //if number already exists on database
+                        } else {
+                            let nixx = antisticker.indexOf(chatId)
+                            antisticker.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            aruga.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
+                        }
+                    } else {
+                        aruga.reply(from, `Establesca on / off\n\n*[Anti Sticker SPAM]*\nCada miembro del grupo que use un sticker como spam será expulsado por el bot!`, id)
+                    }
+                    break
+                    case 'antilink':
+                    if (!isGroupMsg) return aruga.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
+                    if (!isGroupAdmins) return aruga.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
+                    if (args[0] == 'on') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return aruga.reply(from, '*Anti Group Link Detector* ya activo en este grupo', id) //if number already exists on database
+                        } else {
+                            antilink.push(chatId)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            aruga.reply(from, '*[Anti Group Link]* Ha sido activado\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(!cek){
+                            return aruga.reply(from, '*Anti Group Link Detector* ya está inactivo en este grupo', id) //if number already exists on database
+                        } else {
+                            let nixx = antilink.indexOf(chatId)
+                            antilink.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            aruga.reply(from, '*[Anti Group Link]* ha sido deshabilitado\n', id)
+                        }
+                    } else {
+                        aruga.reply(from, `Establesca on / off\n\n*[Anti Group Link]*\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!`, id)
+                    }
+                    break
         case 'sticker':
         case 'stiker':
             if (isMedia && type === 'image') {
@@ -214,7 +266,7 @@ module.exports = kconfig = async (kill, message) => {
 			
 			
 		case 'anonymod':
-    await kill.reply(from, 'Algunos videos del canal de mi bro DEIVID\n\nWhatsApp ANONYMOUS V.06 oFc 100% inmune\n\nhttps://youtu.be/tOE_ywldS_Q\n\nComo modificar un WA prt-1\n\nhttps://youtu.be/WdWsvY3xGPc\n\nWhAtsApp BusSines Golden/13\n\nhttps://youtu.be/JqSHAWlGhDY\n\nNumero virtual +48 método efectivo\n\nhttps://youtu.be/7GOss7AaJ88\n\nNumero virtual +1 EE.Uu (ANONYMOUS DEIVID)\n\nhttps://youtu.be/D1G6hI1mLs4\n\nCreando con pixelLab (ANONYMOUS DEIVID)\n\nhttps://youtu.be/so1y1g-MPZ4\n\nEspero y lo apoyes🤗', id)
+    await kill.reply(from, 'Algunos videos del canal de mi bro DEIVID\n\nWhatsApp ANONYMOUS V.06 oFc 100% inmune\n\nhttps://youtu.be/tOE_ywldS_Q\n\nComo modificar un WA prt-1\n\nhttps://youtu.be/WdWsvY3xGPc\n\nWhAtsApp BusSines Golden/13\n\nhttps://youtu.be/JqSHAWlGhDY\n\nNumero virtual +48 método efectivo\n\nhttps://youtu.be/7GOss7AaJ88\n\nNumero virtual +1 EE.Uu (ANONYMOUS DEIVID)\n\nhttps://youtu.be/D1G6hI1mLs4\n\nCreando con pixelLab (ANONYMOUS DEIVID)\n\nhttps://youtu.be/so1y1g-MPZ4\n\nSu video mas reciente:\n\nhttps://youtu.be/hy4od9BT-tA\n\nEspero y lo apoyes🤗', id)
     break
 	
 	    case 'samu330':
@@ -247,19 +299,25 @@ module.exports = kconfig = async (kill, message) => {
         case 'stikergif':
         case 'gif':
             if (isMedia) {
+                if (isMedia || isQuotedVideo) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
-                    const mediaData = await decryptMedia(message, uaOverride)
-                    client.reply(from, '[WAIT] El proceso puede demorar⏳ mas o menos ± 1 min!', id)
-                    const filename = `./media/aswu.${mimetype.split('/')[1]}`
+                    var mediaData = await decryptMedia(message, uaOverride)
+                    aruga.reply(from, '[WAIT] En curso⏳ espere ± 1 min!', id)
+                    var filename = `./media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./media/output.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                        const gif = await fs.readFileSync('./media/output.gif', { encoding: "base64" })
-                        await client.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                    await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
+                        await aruga.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            aruga.reply(from, 'Lo siento, el archivo es demasiado grande!', id)
+                        })
                     })
-                } else (
-                    client.reply(from, '[❗] Quiere video con leyenda? *!stickerGif* max 10 sec!', id)
-                )
-            }
+                  } else {
+                    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif* max 10 sec!`, id)
+                   }
+                } else {
+		    aruga.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif*`, id)
+	        }
             break
 	
 
