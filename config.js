@@ -106,7 +106,7 @@ module.exports = kconfig = async (kill, message) => {
 	
 	
 		// ANTI GRUPOS && ANTI PORNO
-        if (isGroupMsg && isLeg && !isGroupAdmins && !isOwner){
+        if (isGroupMsg && isLeg && !isGroupAdmins){
             if (chats.match(/(https?:\/\/chat.whatsapp.com)/gi)) {
 				console.log('Comprobando el enlace de grupo recibido.')
                 const check = await kill.inviteInfo(chats)
@@ -945,33 +945,16 @@ module.exports = kconfig = async (kill, message) => {
 
         case 'tts': // Esse é enormeeeee, fazer o que, sou baiano pra jogar noutro js
             if (args.length === 0) return client.reply(from, 'Enviar comado *!tts [id, en, jp, ar] [texto], *ejemplo!* *tts id hola samu*')
-            const ttsId = require('node-gtts')('id')
-            const ttsEn = require('node-gtts')('en')
-	    const ttsJp = require('node-gtts')('ja')
-            const ttsAr = require('node-gtts')('ar')
+            const ttsGB = require('node-gtts')(args[0])
             const dataText = body.slice(8)
-            if (dataText === '') return client.reply(from, 'Baka?', id)
-            if (dataText.length > 500) return client.reply(from, 'Teks terlalu panjang!', id)
-            var dataBhs = body.slice(5, 7)
-	        if (dataBhs == 'id') {
-                ttsId.save('./media/tts/resId.mp3', dataText, function () {
-                    client.sendPtt(from, './media/tts/resId.mp3', id)
-                })
-            } else if (dataBhs == 'en') {
-                ttsEn.save('./media/tts/resEn.mp3', dataText, function () {
-                    client.sendPtt(from, './media/tts/resEn.mp3', id)
-                })
-            } else if (dataBhs == 'jp') {
-                ttsJp.save('./media/tts/resJp.mp3', dataText, function () {
-                    client.sendPtt(from, './media/tts/resJp.mp3', id)
-                })
-	    } else if (dataBhs == 'ar') {
-                ttsAr.save('./media/tts/resAr.mp3', dataText, function () {
-                    client.sendPtt(from, './media/tts/resAr.mp3', id)
-                })
-            } else {
-                client.reply(from, 'Masukkan data bahasa : [id] untuk indonesia, [en] untuk inggris, [jp] untuk jepang, dan [ar] untuk arab', id)
-            }
+                if (dataText === '') return aruga.reply(from, 'cual es el texto..', id)
+                try {
+                    ttsGB.save('./media/tts.mp3', dataText, function () {
+                    aruga.sendPtt(from, './media/tts.mp3', id)
+                    })
+                } catch (err) {
+                    aruga.reply(from, err, id)
+                }
             break
 
         case 'idiomas':
