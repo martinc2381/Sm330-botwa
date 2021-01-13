@@ -320,11 +320,11 @@ module.exports = kconfig = async (kill, message) => {
 	        }
             break
 	
-
-		case 'simg':
+			
+		    case 'simg':
             if (isMedia && type === 'image') {
                 const mediaData = await decryptMedia(message, uaOverride)
-				kill.reply(from, 'Espera, tarda más de 20 segundos. \n\n * NO VUELVAS A USAR * hasta que termine, de lo contrario todas las funciones serán bloqueadas por IP.', id)
+				kill.reply(from, 'Espera, tarda más de 20 segundos.\n\n *NO USAR DE NUEVO* hasta que termine, de lo contrario, todas las funciones serán bloqueadas por IP.', id)
 				const sendres = (results) => {
 					const ttile = results[0].title.replace('<span>', '').replace('</span>', '')
 					const ttscig = results[1].title.replace('<span>', '').replace('</span>', '')
@@ -333,15 +333,14 @@ module.exports = kconfig = async (kill, message) => {
 				}
                 var seaimg = './lib/media/img/imagesearch.jpg'
                 await fs.writeFile(seaimg, mediaData)
-				const upimg = await imgbbUploader("c7ae2ba54bf9ea69f728b59930a32a08", seaimg)
+				const upimg = await imgbbUploader("API DA IMGBB", seaimg) // Bote uma api do imgbb pras suas fotos n irem pra minha conta
 				console.log(upimg.url)
 				await sleep(10000)
 				const resimg = await imgsearch(upimg.url, sendres)
 			} else {
-				await kill.reply(from, 'Amigo, esto solo funciona con imágenes.', id)
+				await kill.reply(from, 'Amigo(a), esto solo funciona con imágenes.', id)
 			}
 			break
-			
 
 		case 'upimg':
             if (isMedia && type === 'image') {
