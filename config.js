@@ -345,7 +345,7 @@ module.exports = kconfig = async (kill, message) => {
                 if (isMedia || isQuotedVideo) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                     var mediaData = await decryptMedia(message, uaOverride)
-                    aruga.reply(from, '[WAIT] En curso⏳ espere ± 1 min!', id)
+                    kill.reply(from, '[WAIT] En curso⏳ espere ± 1 min!', id)
                     var filename = `./media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
