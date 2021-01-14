@@ -133,6 +133,28 @@ module.exports = kconfig = async (kill, message) => {
 				console.log('Se recibió un enlace de grupo, pero era de alguien en la Lista Blanca o en el PV.')
 			}
 		}
+	    
+	    //fitur anti link
+        if (isGroupMsg){
+            if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
+                const check = await kill.inviteInfo(chats);
+                if (!check) {
+                    return
+                } else {
+                    kill.reply(from, '*[GROUP LINK DETECTOR]*\nEnviaste un enlace de chat grupal, lo siento, te expulsaron del grupo :(', id).then(() => {
+                        kill.removeParticipant(groupId, sender.id)
+                    })
+                }
+            }
+        }
+
+
+        if (isGroupMsg){
+            if(stickermsg === true){
+                if(isStickerMsg(serial)) return
+                addStickerCount(serial)
+            }
+        }
 	            
         // ANTI FLOOD PRIVADO
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) {
@@ -300,42 +322,17 @@ module.exports = kconfig = async (kill, message) => {
         case 'stickergif':
         case 'stikergif':
         case 'gif':
-            if (isMedia) {
-                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
-                    var mediaData = await decryptMedia(message, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Aff!La conversión tiene errores, tal vez sea el tamaño del gif o su peso.', id)
-                        })
-                    })
-                } else {
-                    kill.reply(from, `Si recibe esto, considere 2 razones.\n\n1 - Esto no es un gif o video.\n\n2 - El gif o video dura más de 15 segundos, excediendo el límite que puedo convertir`, id)
+            if (isMedia && type == 'video') {
+                if (mimetype === 'video/mp4' && message.duration < 30) {
+                const mediaData = await decryptMedia(message, uaOverride)
+               const filename = `./media/aswu.mp4`
+                await fs.writeFile(filename, mediaData)
+                await exec('ffmpeg -i ./media/aswu.mp4 -vf scale=512:-1 -r 10 -f image2pipe -framerate 24 -vcodec ppm - | convert -delay 0 -loop 0 - ./media/output.gif')
+                const contents = await fs.readFile('./media/output.gif', {encoding: 'base64'}) 
+                await kill.sendImageAsSticker(from, `data:image/gif;base64,${contents.toString('base64')}`)
                 }
-            } else if (quotedMsg) {
-                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
-                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Aff! La conversión tiene errores, tal vez sea el tamaño del gif o su peso.', id)
-                        })
-                    })
-                } else {
-                    kill.reply(from, `Si recibe esto, considere 2 razones.\n\n1 - Esto no es un gif o video.\n\n2 - El gif o video dura más de 15 segundos, excediendo el límite que puedo convertir.`, id)
-                }
-			} else {
-                kill.reply(from, mess.error.St, id)
             }
-            break
+		break
 		    
 		case 'upimg':
             if (isMedia && type === 'image') {
@@ -941,13 +938,13 @@ module.exports = kconfig = async (kill, message) => {
             if (args.length === 0) return client.reply(from, 'Enviar comado *!tts [id, en, jp, ar] [texto], *ejemplo!* *tts id hola samu*')
             const ttsGB = require('node-gtts')(args[0])
             const dataText = body.slice(8)
-                if (dataText === '') return aruga.reply(from, 'cual es el texto..', id)
+                if (dataText === '') return kill.reply(from, 'cual es el texto..', id)
                 try {
                     ttsGB.save('./media/tts.mp3', dataText, function () {
-                    aruga.sendPtt(from, './media/tts.mp3', id)
+                    kill.sendPtt(from, './media/tts.mp3', id)
                     })
                 } catch (err) {
-                    aruga.reply(from, err, id)
+                    kill.reply(from, err, id)
                 }
             break
 
