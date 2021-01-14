@@ -133,6 +133,101 @@ module.exports = kconfig = async (kill, message) => {
 			}
 		}
 		
+	    // [BETA] Avoid Spam Message
+        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
+        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        //
+        if(!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
+        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
+
+        function isStickerMsg(id){
+            if (isOwner) {return false;}
+            let found = false;
+            for (let i of stickerspam){
+                if(i.id === id){
+                    if (i.msg >= 7) {
+                        found === true 
+                        kill.reply(from, '*[ANTI STICKER SPAM]*\nTienes SPAM STICKER en el grupo, el bot te eliminara automáticamente', message.id).then(() => {
+                            kill.removeParticipant(groupId, id)
+                        }).then(() => {
+                            const cus = id
+                            var found = false
+                            Object.keys(stickerspam).forEach((i) => {
+                                if(stickerspam[i].id == cus){
+                                    found = i
+                                }
+                            })
+                            if (found !== false) {
+                                stickerspam[found].msg = 1;
+                                const result = '✅ DB Sticker Spam has been reset'
+                                console.log(stickerspam[found])
+                                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
+                                kill.sendText(from, result)
+                            } else {
+                                    kill.reply(from, `${monospace(`No hay número en la base de datos, hermano.`)}`, id)
+                            }
+                        })
+                        return true;
+                    }else{
+                        found === true
+                        return false;
+                    }   
+                }
+            }
+            if (found === false){
+                let obj = {id: `${id}`, msg:1};
+                stickerspam.push(obj);
+                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
+                return false;
+            }  
+        }
+        function addStickerCount(id){
+            if (isOwner) {return;}
+            var found = false
+            Object.keys(stickerspam).forEach((i) => {
+                if(stickerspam[i].id == id){
+                    found = i
+                }
+            })
+            if (found !== false) {
+                stickerspam[found].msg += 1;
+                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
+            }
+        }
+
+        //fitur anti link
+        if (isGroupMsg && GroupLinkDetector && !isGroupAdmins && !isOwner){
+            if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
+                const check = await kill.inviteInfo(chats);
+                if (!check) {
+                    return
+                } else {
+                    kill.reply(from, '*[GROUP LINK DETECTOR]*\nEnviaste un enlace de chat grupal, lo siento, te expulsaron del grupo :(', id).then(() => {
+                        kill.removeParticipant(groupId, sender.id)
+                    })
+                }
+            }
+        }
+
+
+        if (isGroupMsg && AntiStickerSpam && !isGroupAdmins && !isOwner){
+            if(stickermsg === true){
+                if(isStickerMsg(serial)) return
+                addStickerCount(serial)
+            }
+        }
+
+        // [BETA] Avoid Spam Message
+        msgFilter.addFilter(from)
+	
+	//[AUTO READ] Auto read message 
+	kill.sendSeen(chatId)
+	    
+	// Filter Banned People
+        if (isBanned) {
+            return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
+        }
 	            
         // ANTI FLOOD PRIVADO
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) {
@@ -202,7 +297,61 @@ module.exports = kconfig = async (kill, message) => {
                     kill.reply(from, mess.error.St, id)
             }
             break
+
+			case 'antisticker':
+            case 'antistiker':
+                    if (!isGroupMsg) return kill.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
+                    if (!isGroupAdmins) return kill.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
+                    if (args[0] == 'on') {
+                        var cek = antisticker.includes(chatId);
+                        if(cek){
+                            return kill.reply(from, '*Anti Spam Sticker Detector* ya activo en este grupo', id) //if number already exists on database
+                        } else {
+                            antisticker.push(chatId)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            kill.reply(from, '*[Anti Sticker SPAM]* Ha sido activado\nCada miembro del grupo cuya etiqueta de spam sea más de 7 será expulsado por el bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return kill.reply(from, '*Anti Spam Sticker Detector* ya está inactivo en este grupo', id) //if number already exists on database
+                        } else {
+                            let nixx = antisticker.indexOf(chatId)
+                            antisticker.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
+                            kill.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
+                        }
+                    } else {
+                        kill.reply(from, `Establezca on / off\n\n*[Anti Sticker SPAM]*\nCada miembro del grupo que sea una calcomanía de spam será expulsado por el bot!`, id)
+                    }
+                    break
 			
+                    case 'antilink':
+                    if (!isGroupMsg) return kill.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
+                    if (!isGroupAdmins) return kill.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
+                    if (args[0] == 'on') {
+                        var cek = antilink.includes(chatId);
+                        if(cek){
+                            return kill.reply(from, '*Anti Group Link Detector* ya activo en este grupo', id) //if number already exists on database
+                        } else {
+                            antilink.push(chatId)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            kill.reply(from, '*[Anti Group Link]* Ha sido activado\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!', id)
+                        }
+                    } else if (args[0] == 'off') {
+                        var cek = antilink.includes(chatId);
+                        if(!cek){
+                            return kill.reply(from, '*Anti Group Link Detector* ya está inactivo en este grupo', id) //if number already exists on database
+                        } else {
+                            let nixx = antilink.indexOf(chatId)
+                            antilink.splice(nixx, 1)
+                            fs.writeFileSync('./lib/helper/antilink.json', JSON.stringify(antilink))
+                            kill.reply(from, '*[Anti Group Link]* ha sido deshabilitado\n', id)
+                        }
+                    } else {
+                        kill.reply(from, `Establezca on / off\n\n*[Anti Group Link]*\nCada miembro del grupo que envíe un mensaje que contenga el enlace del grupo será expulsado por el bot!`, id)
+                    }
+                    break 
 
 		case 'ttp':
 			if (args.length == 0) return kill.reply(from, '¿Dónde está la frase?', id)
@@ -247,25 +396,40 @@ module.exports = kconfig = async (kill, message) => {
         case 'stikergif':
         case 'gif':
             if (isMedia) {
-                if (isMedia || isQuotedVideo) {
-                if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
+                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
                     var mediaData = await decryptMedia(message, uaOverride)
-                    kill.reply(from, '[WAIT] En curso⏳ espere ± 1 min!', id)
-                    var filename = `./media/stickergif.${mimetype.split('/')[1]}`
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./media/stickergf.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./media/stickergf.gif', { encoding: "base64" })
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
                         await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                         .catch(() => {
-                            kill.reply(from, 'Lo siento, el archivo es demasiado grande!', id)
+                            kill.reply(from, 'Aff!La conversión tiene errores, tal vez sea el tamaño del gif o su peso.', id)
                         })
                     })
-                  } else {
-                    kill.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif* max 10 sec!`, id)
-                   }
                 } else {
-		    kill.reply(from, `[❗] Envía un gif con una leyenda *${prefix}stickergif*`, id)
-	        }
+                    kill.reply(from, `Si recibe esto, considere 2 razones.\n\n1 - Esto no es un gif o video.\n\n2 - El gif o video dura más de 15 segundos, excediendo el límite que puedo convertir`, id)
+                }
+            } else if (quotedMsg) {
+                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
+                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Aff! La conversión tiene errores, tal vez sea el tamaño del gif o su peso.', id)
+                        })
+                    })
+                } else {
+                    kill.reply(from, `Si recibe esto, considere 2 razones.\n\n1 - Esto no es un gif o video.\n\n2 - El gif o video dura más de 15 segundos, excediendo el límite que puedo convertir.`, id)
+                }
+			} else {
+                kill.reply(from, mess.error.St, id)
+            }
             break
 		    
 		case 'upimg':
