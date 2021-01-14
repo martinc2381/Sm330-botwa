@@ -73,6 +73,7 @@ module.exports = kconfig = async (kill, message) => {
 		const isLeg = exsv.includes(chatId)
         const isNsfw = isGroupMsg ? nsfw_.includes(chat.id) : false
         const isUrl = new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi)
+	
 
 
         // Bot Prefix
@@ -132,102 +133,6 @@ module.exports = kconfig = async (kill, message) => {
 				console.log('Se recibió un enlace de grupo, pero era de alguien en la Lista Blanca o en el PV.')
 			}
 		}
-		
-	    // [BETA] Avoid Spam Message
-        if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
-        if (isCmd && msgFilter.isFiltered(from) && isGroupMsg) { return console.log(color('[SPAM]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
-        //
-        if(!isCmd && isKasar && isGroupMsg) { console.log(color('[BADW]', 'orange'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${argx}`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
-        if (isCmd && !isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname)) }
-        if (isCmd && isGroupMsg) { console.log(color('[EXEC]'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname), 'in', color(name || formattedTitle)) }
-
-        function isStickerMsg(id){
-            if (isOwner) {return false;}
-            let found = false;
-            for (let i of stickerspam){
-                if(i.id === id){
-                    if (i.msg >= 7) {
-                        found === true 
-                        kill.reply(from, '*[ANTI STICKER SPAM]*\nTienes SPAM STICKER en el grupo, el bot te eliminara automáticamente', message.id).then(() => {
-                            kill.removeParticipant(groupId, id)
-                        }).then(() => {
-                            const cus = id
-                            var found = false
-                            Object.keys(stickerspam).forEach((i) => {
-                                if(stickerspam[i].id == cus){
-                                    found = i
-                                }
-                            })
-                            if (found !== false) {
-                                stickerspam[found].msg = 1;
-                                const result = '✅ DB Sticker Spam has been reset'
-                                console.log(stickerspam[found])
-                                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
-                                kill.sendText(from, result)
-                            } else {
-                                    kill.reply(from, `${monospace(`No hay número en la base de datos, hermano.`)}`, id)
-                            }
-                        })
-                        return true;
-                    }else{
-                        found === true
-                        return false;
-                    }   
-                }
-            }
-            if (found === false){
-                let obj = {id: `${id}`, msg:1};
-                stickerspam.push(obj);
-                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
-                return false;
-            }  
-        }
-        function addStickerCount(id){
-            if (isOwner) {return;}
-            var found = false
-            Object.keys(stickerspam).forEach((i) => {
-                if(stickerspam[i].id == id){
-                    found = i
-                }
-            })
-            if (found !== false) {
-                stickerspam[found].msg += 1;
-                fs.writeFileSync('./lib/helper/stickerspam.json',JSON.stringify(stickerspam));
-            }
-        }
-
-        //fitur anti link
-        if (isGroupMsg && GroupLinkDetector && !isGroupAdmins && !isOwner){
-            if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
-                const check = await kill.inviteInfo(chats);
-                if (!check) {
-                    return
-                } else {
-                    kill.reply(from, '*[GROUP LINK DETECTOR]*\nEnviaste un enlace de chat grupal, lo siento, te expulsaron del grupo :(', id).then(() => {
-                        kill.removeParticipant(groupId, sender.id)
-                    })
-                }
-            }
-        }
-
-
-        if (isGroupMsg && AntiStickerSpam && !isGroupAdmins && !isOwner){
-            if(stickermsg === true){
-                if(isStickerMsg(serial)) return
-                addStickerCount(serial)
-            }
-        }
-
-        // [BETA] Avoid Spam Message
-        msgFilter.addFilter(from)
-	
-	//[AUTO READ] Auto read message 
-	kill.sendSeen(chatId)
-	    
-	// Filter Banned People
-        if (isBanned) {
-            return console.log(color('[BAN]', 'red'), color(moment(t * 1000).format('DD/MM/YY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
-        }
 	            
         // ANTI FLOOD PRIVADO
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) {
