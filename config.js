@@ -133,28 +133,6 @@ module.exports = kconfig = async (kill, message) => {
 				console.log('Se recibió un enlace de grupo, pero era de alguien en la Lista Blanca o en el PV.')
 			}
 		}
-	    
-	    //fitur anti link
-        if (isGroupMsg){
-            if (chats.match(/(https:\/\/chat.whatsapp.com)/gi)) {
-                const check = await kill.inviteInfo(chats);
-                if (!check) {
-                    return
-                } else {
-                    kill.reply(from, '*[GROUP LINK DETECTOR]*\nEnviaste un enlace de chat grupal, lo siento, te expulsaron del grupo :(', id).then(() => {
-                        kill.removeParticipant(groupId, sender.id)
-                    })
-                }
-            }
-        }
-
-
-        if (isGroupMsg){
-            if(stickermsg === true){
-                if(isStickerMsg(serial)) return
-                addStickerCount(serial)
-            }
-        }
 	            
         // ANTI FLOOD PRIVADO
         if (isCmd && msgFilter.isFiltered(from) && !isGroupMsg) {
