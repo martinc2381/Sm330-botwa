@@ -29,6 +29,7 @@ const { meme, msgFilter, translate, kill } = require('./lib')
 const { uploadImages } = require('./lib/fether')
 const feature = require('./lib/poll')
 const { sobre } = require('./lib/sobre')
+const { belle } = require('./lib/belle')
 const BrainlySearch = require('./lib/brainly')
 const { removeBackgroundFromImageBase64 } = require('remove.bg')
 const fetch = require('node-fetch');
