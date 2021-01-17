@@ -208,7 +208,7 @@ module.exports = kconfig = async (kill, message) => {
             case 'antistiker':
                     if (!isGroupMsg) return kill.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
                     if (!isGroupAdmins) return kill.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
-                    if (args[0] == 'on') {
+                    if (kill[0] == 'on') {
                         var cek = antisticker.includes(chatId);
                         if(cek){
                             return kill.reply(from, '*Anti Spam Sticker Detector* ya activo en este grupo', id) //if number already exists on database
@@ -281,7 +281,7 @@ module.exports = kconfig = async (kill, message) => {
 			break
 			
 		case 'belle':
-			await kill.sendFile(from, './lib/media/img/belle.png', 'belle.png', sobre, id)
+			await kill.sendFile(from, './lib/media/img/belle.png', 'belle.png', belle, id)
 			break
 
 			
@@ -542,7 +542,7 @@ module.exports = kconfig = async (kill, message) => {
 		case 'img':
             if (quotedMsg && quotedMsg.type == 'sticker') {
                 const mediaData = await decryptMedia(quotedMsg)
-                kill.reply(from, `Só esperar, pode levar um tempinho...`, id)
+                kill.reply(from, `Podrias esperar porfavor? esto lleva un poco de tiempo👑`, id)
                 const stickerImage = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
                 await kill.sendFile(from, stickerImage, '', 'Disfruta, aquí tienes tu foto! :D', id)
 			} else if (!quotedMsg) return kill.reply(from, `Lo siento, esto es solo para stickers...`, id)
@@ -919,17 +919,25 @@ module.exports = kconfig = async (kill, message) => {
 
 
         case 'tts': // Esse é enormeeeee, fazer o que, sou baiano pra jogar noutro js
-            if (args.length === 0) return client.reply(from, 'Enviar comado *!tts [id, en, jp, ar] [texto], *ejemplo!* *tts id hola samu*')
-            const ttsGB = require('node-gtts')(args[0])
+            if (args.length == 0) return kill.reply(from, 'Wrong Fromat!')
+                const ttsEn = require('node-gtts')('en')
+	        const ttsJp = require('node-gtts')('ja')
             const dataText = body.slice(8)
-                if (dataText === '') return kill.reply(from, 'cual es el texto..', id)
-                try {
-                    ttsGB.save('./media/tts.mp3', dataText, function () {
-                    kill.sendPtt(from, './media/tts.mp3', id)
-                    })
-                } catch (err) {
-                    kill.reply(from, err, id)
-                }
+            if (dataText === '') return kill.reply(from, 'Baka?', message.id)
+            if (dataText.length > 250) return kill.reply(from, 'Unable to convert', message.id)
+            var dataBhs = body.slice(5, 7)
+	        if (dataBhs == 'id') {
+		    } else if (dataBhs == 'en') {
+                ttsEn.save('./tts/resEn.mp3', dataText, function () {
+                    kill.sendPtt(from, './media/tts/resEn.mp3', message.id)
+                })
+		    } else if (dataBhs == 'jp') {
+                ttsJp.save('./tts/resJp.mp3', dataText, function () {
+                    kill.sendPtt(from, './media/tts/resJp.mp3', message.id)
+                })
+		    } else {
+		        kill.reply(from, 'Currently only English and Japanese are supported!', message.id)
+            }
             break
 
         case 'idiomas':
