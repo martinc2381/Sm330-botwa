@@ -305,17 +305,42 @@ module.exports = kconfig = async (kill, message) => {
         case 'stickergif':
         case 'stikergif':
         case 'gif':
-           if (isMedia && type == 'video') {
-                if (mimetype === 'video/mp4' && message.duration < 30) {
-                const mediaData = await decryptMedia(message, uaOverride)
-               const filename = `./media/aswu.mp4`
-                await fs.writeFile(filename, mediaData)
-                await exec('ffmpeg -i ./media/aswu.mp4 -vf scale=512:-1 -r 10 -f image2pipe -framerate 24 -vcodec ppm - | convert -delay 0 -loop 0 - ./media/output.gif')
-                const contents = await fs.readFile('./media/output.gif', {encoding: 'base64'}) 
-                await client.sendImageAsSticker(from, `data:image/gif;base64,${contents.toString('base64')}`)
+           if (isMedia) {
+                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
+                    var mediaData = await decryptMedia(message, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Uff, hubo un error en la convercion, puede ser el peso del viseo/gif.', id)
+                        })
+                    })
+                } else {
+                    kill.reply(from, `Si recibe esto puede ser por 2 motivos.\n\n1 - Esto no es un gif o video.\n\n2 - el gif o video supera los 15 segundos`, id)
                 }
+            } else if (quotedMsg) {
+                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
+                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Uff, hubo un error en la convercion, puede ser el peso del viseo/gif.', id)
+                        })
+                    })
+                } else {
+                    kill.reply(from, `Si recibe esto puede ser por 2 motivos.\n\n1 - Esto no es un gif o video.\n\n2 - el gif o video supera los 15 segundos.`, id)
+                }
+			} else {
+                kill.reply(from, mess.error.St, id)
             }
-            break 
+            break
 			
 		case 'upimg':
             if (isMedia && type === 'image') {
@@ -1720,19 +1745,21 @@ module.exports = kconfig = async (kill, message) => {
 
 
         case 'join':
-if (args.length == 0) return kill.reply(from, 'Wrong Format', message.id)
-            const link = body.slice(6)
+            if (args.length == 0) return kill.reply(from, 'Ay algo mal en esto!', id)
+            const gplk = body.slice(6)
+            const tGr = await kill.getAllGroups()
             const minMem = 30
-            const isLink = link.match(/(https:\/\/chat.whatsapp.com)/gi)
-            const check = await kill.inviteInfo(link)
-            if (!isLink) return kill.reply(from, 'Where\'s the link?', message.id)
-            if (check.size < minMem) return kill.reply(from, 'The group does not have 30+ members', message.id)
-            await kill.joinGroupViaLink(link).then( async () => {
-                await kill.reply(from, '*Joined* ✨️', message.id)
-            }).catch(error => {
-                kill.reply(from, 'An error occured 💔️', message.id)
-            })
-            break
+            const isLink = gplk.match(/(https:\/\/chat.whatsapp.com)/gi)
+            const check = await kill.inviteInfo(gplk)
+            if (!isLink) return kill.reply(from, 'Link errado', id)
+            if (tGr.length > 6) return kill.reply(from, 'uuuu jaja estoy al maximo de grupos, lo siento.', id)
+            if (check.size < minMem) return kill.reply(from, 'Solo puede funcionar con grupos con +30 personas.', id)
+            if (check.status === 200) {
+                await kill.joinGroupViaLink(gplk).then(() => kill.reply(from, 'Entrando al grupo...'))
+            } else {
+                kill.reply(from, 'Link invalido', id)
+            }
+     break
 
         case 'delete':
         case 'del':
