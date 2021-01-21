@@ -305,35 +305,18 @@ module.exports = kconfig = async (kill, message) => {
         case 'stickergif':
         case 'stikergif':
         case 'gif':
-           if (isMedia) {
-                    if (type == 'video') {
-                       if (message.duration < 15) {
-                       sendSticker.sendAnimatedSticker(message)
-                       } else {
-                       await client.reply(from, 'The given file is too large for converting', id)
-                       }
-                    } else if (type == 'image') {
-                      const mediaData = await decryptMedia(message)
-                      const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
-                      const baseImg = imageBase64.replace('video/mp4','image/gif')
-                      await client.sendImageAsSticker(from, baseImg)
-                    }
-                } else if (quotedMsg && quotedMsg.type == 'image') {
-                    const mediaData = await decryptMedia(quotedMsg)
-                    const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-                    await client.sendImageAsSticker(from, imageBase64)
-                } else if (quotedMsg && quotedMsg.type == 'video') {
-                          if (message.duration < 15) {
-                          sendSticker.sendAnimatedSticker(message)
-                          } else {
-                          await client.reply(from, 'The given file is too large for converting', id)
-                          }
-                } else {
-                  client.reply(from, 'You did not tag a picture or video, Baka', message.id)
-                    }
-                break
-            break
-		    
+           if (isMedia && type == 'video') {
+                if (mimetype === 'video/mp4' && message.duration < 30) {
+                const mediaData = await decryptMedia(message, uaOverride)
+               const filename = `./media/aswu.mp4`
+                await fs.writeFile(filename, mediaData)
+                await exec('ffmpeg -i ./media/aswu.mp4 -vf scale=512:-1 -r 10 -f image2pipe -framerate 24 -vcodec ppm - | convert -delay 0 -loop 0 - ./media/output.gif')
+                const contents = await fs.readFile('./media/output.gif', {encoding: 'base64'}) 
+                await client.sendImageAsSticker(from, `data:image/gif;base64,${contents.toString('base64')}`)
+                }
+            }
+            break 
+			
 		case 'upimg':
             if (isMedia && type === 'image') {
                 const mediaData = await decryptMedia(message, uaOverride)
@@ -1737,22 +1720,19 @@ module.exports = kconfig = async (kill, message) => {
 
 
         case 'join':
-            if (args.length == 0) return kill.reply(from, 'No lo sé, hay algo mal en eso!', id)
-            const gplk = body.slice(6)
-            const tGr = await kill.getAllGroups()
+if (args.length == 0) return kill.reply(from, 'Wrong Format', message.id)
+            const link = body.slice(6)
             const minMem = 30
-            const isLink = gplk.match(/(https:\/\/chat.whatsapp.com)/gi)
-            const check = await kill.inviteInfo(gplk)
-            if (!isLink) return kill.reply(from, 'Link errado', id)
-            if (tGr.length > 6) return kill.reply(from, 'Jaja estoy en el máximo de grupos, lo siento.', id)
-            if (check.size < minMem) return kill.reply(from, 'Solo puedo trabajar en grupos de más de 30 personas.', id)
-            if (check.status === 200) {
-                await kill.joinGroupViaLink(gplk).then(() => kill.reply(from, 'Entrando al grupo...'))
-            } else {
-                kill.reply(from, 'Link invalido', id)
-            }
+            const isLink = link.match(/(https:\/\/chat.whatsapp.com)/gi)
+            const check = await kill.inviteInfo(link)
+            if (!isLink) return kill.reply(from, 'Where\'s the link?', message.id)
+            if (check.size < minMem) return kill.reply(from, 'The group does not have 30+ members', message.id)
+            await kill.joinGroupViaLink(link).then( async () => {
+                await kill.reply(from, '*Joined* ✨️', message.id)
+            }).catch(error => {
+                kill.reply(from, 'An error occured 💔️', message.id)
+            })
             break
-
 
         case 'delete':
         case 'del':
