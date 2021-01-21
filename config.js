@@ -225,7 +225,7 @@ module.exports = kconfig = async (kill, message) => {
                             let nixx = antisticker.indexOf(chatId)
                             antisticker.splice(nixx, 1)
                             fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
-                            kill.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
+                            client.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
                         }
                     } else {
                         kill.reply(from, `Establezca on / off\n\n*[Anti Sticker SPAM]*\nCada miembro del grupo que sea una calcomanía de spam será expulsado por el bot!`, id)
@@ -305,34 +305,34 @@ module.exports = kconfig = async (kill, message) => {
         case 'stickergif':
         case 'stikergif':
         case 'gif':
-            if (isMedia) {
+           if (isMedia) {
                     if (type == 'video') {
                        if (message.duration < 15) {
-                       kill.sendAnimatedSticker(message)
+                       sendSticker.sendAnimatedSticker(message)
                        } else {
-                       await kill.reply(from, 'The given file is too large for converting', id)
+                       await client.reply(from, 'The given file is too large for converting', id)
                        }
                     } else if (type == 'image') {
                       const mediaData = await decryptMedia(message)
                       const imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                       const baseImg = imageBase64.replace('video/mp4','image/gif')
-                      await kill.sendImageAsSticker(from, resizedBase64)
+                      await client.sendImageAsSticker(from, baseImg)
                     }
                 } else if (quotedMsg && quotedMsg.type == 'image') {
                     const mediaData = await decryptMedia(quotedMsg)
                     const imageBase64 = `data:${quotedMsg.mimetype};base64,${mediaData.toString('base64')}`
-                    await kill.sendImageAsSticker(from, imageBase64)
+                    await client.sendImageAsSticker(from, imageBase64)
                 } else if (quotedMsg && quotedMsg.type == 'video') {
                           if (message.duration < 15) {
-                          kill.sendAnimatedSticker(message)
+                          sendSticker.sendAnimatedSticker(message)
                           } else {
-                          await kill.reply(from, 'The given file is too large for converting', id)
+                          await client.reply(from, 'The given file is too large for converting', id)
                           }
                 } else {
-                  kill.reply(from, 'You did not tag a picture or video, Baka', message.id)
+                  client.reply(from, 'You did not tag a picture or video, Baka', message.id)
                     }
                 break
-	break
+            break
 		    
 		case 'upimg':
             if (isMedia && type === 'image') {
@@ -1404,12 +1404,12 @@ module.exports = kconfig = async (kill, message) => {
                     const { is_adult, title, title_chinese, title_romaji, title_english, episode, similarity, filename, at, tokenthumb, anilist_id } = resolt.docs[0]
                     teks = ''
                     if (similarity < 0.92) {
-                    	teks = '*Puede ser ~ ó es ~ incorrecto...* :\n\n'
+                    	teks = '*Puede ser ~ó es~ incorrecto...* :\n\n'
                     }
-                    teks += `➸ *Titulo em Japonês* : ${title}\n➸ *Titulo en Chinesse* : ${title_chinese}\n➸ *Titulo em Romaji* : ${title_romaji}\n➸ *Title English* : ${title_english}\n`
+                    teks += `➸ *Titulo en Japonês* : ${title}\n➸ *Titulo en Chinesse* : ${title_chinese}\n➸ *Titulo em Romaji* : ${title_romaji}\n➸ *Title English* : ${title_english}\n`
                     teks += `➸ *Ecchi* : ${is_adult}\n`
                     teks += `➸ *Episodio* : ${episode.toString()}\n`
-                    teks += `➸ *Similaridade dos traços* : ${(similarity * 100).toFixed(1)}%\n`
+                    teks += `➸ *Similitud de los trazos* : ${(similarity * 100).toFixed(1)}%\n`
                     var video = `https://media.trace.moe/video/${anilist_id}/${encodeURIComponent(filename)}?t=${at}&token=${tokenthumb}`;
                     kill.sendFileFromUrl(from, video, 'nimek.mp4', teks, id).catch(() => {
                         kill.reply(from, teks, id)
@@ -1511,9 +1511,9 @@ module.exports = kconfig = async (kill, message) => {
         case 'everyone':
 			if (isGroupMsg && isGroupAdmins) {
 				const groupMem = await kill.getGroupMembers(groupId)
-				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n╠✪〘 Asunto: ${body.slice(10)} 〙✪═\n\n`
+				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Asunto: ${body.slice(10)} 〙✪═\n\n`
 				for (let i = 0; i < groupMem.length; i++) {
-					hehe += '♻╠➥ '
+					hehe += '🔥╠➥ '
 					hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
 				}
 				hehe += '\n✔╚═✪〘 Gracias, te amo ❤ 〙✪═'
@@ -1521,9 +1521,9 @@ module.exports = kconfig = async (kill, message) => {
 				await kill.sendTextWithMentions(from, hehe, id)
 			} else if (isGroupMsg && isOwner) {
 				const groupMem = await kill.getGroupMembers(groupId)
-				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n═✪〘 Assunto: ${body.slice(10)} 〙✪═\n\n`
+				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Assunto: ${body.slice(10)} 〙✪═\n\n`
 				for (let i = 0; i < groupMem.length; i++) {
-					hehe += '♻╠➥ '
+					hehe += '🔥╠➥ '
 					hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
 				}
 				hehe += '\n✔╚═✪〘 Gracias, te amo ❤ 〙✪═'
@@ -1732,7 +1732,7 @@ module.exports = kconfig = async (kill, message) => {
             const loadedMsg = await kill.getAmountOfLoadedMessages()
             const chatIds = await kill.getAllChatIds()
             const groups = await kill.getAllGroups()
-            kill.sendText(from, `Status :\n- *${loadedMsg}* Mensajes recibidos después de llamar\n- *${groups.length}* Conversaciones en grupo\n- *${chatIds.length - groups.length}* Conversaciones no PV\n- *${chatIds.length}* Total de conversaciones`)
+            kill.sendText(from, `Status :\n- *${loadedMsg}* Mensajes recibidos después de llamar\n- *${groups.length}* Conversaciones en grupo\n- *${chatIds.length - groups.length}* Conversaciones en PV\n- *${chatIds.length}* Total de conversaciones`)
             break
 
 
