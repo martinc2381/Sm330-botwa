@@ -65,7 +65,7 @@ module.exports = kconfig = async (kill, message) => {
         const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
         const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
 		const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
-        const ownerNumber = '9984907794' // MUDE ISSO PARA O SEU NUMERO
+        const ownerNumber = '+529984907794' // MUDE ISSO PARA O SEU NUMERO
         const isOwner = sender.id === ownerNumber
         global.pollfile = 'poll_Config_'+chat.id+'.json'
         global.voterslistfile = 'poll_voters_Config_'+chat.id+'.json'
@@ -1843,7 +1843,7 @@ module.exports = kconfig = async (kill, message) => {
 			if (args[0] == 'on') {
                 exsv.push(chatId)
                 fs.writeFileSync('./lib/exclusive.json', JSON.stringify(exsv))
-                kill.reply(from, 'Se han habilitado los comandos exclusivos de Legion.', id)
+                kill.reply(from, 'Se han habilitado los comandos exclusivos de Legion (antilink,antiporno, no sacar al bot).', id)
 			} else if (args[0] == 'off') {
 				let exclu = exsv.indexOf(chatId)
                 exsv.splice(exclu, 1)
@@ -2402,7 +2402,7 @@ module.exports = kconfig = async (kill, message) => {
 		case 'ship':
             lvak = body.trim().split(' ')
 			if (args.length == 2) {
-				await kill.sendTextWithMentions(from, '❤️ ' + lvak[1] + ' tiene la oportunidad del ' + lvpc + '% de estar con ' + lvak[2] + '. 👩‍❤️‍👨❣️\n*CASAMIENTO...*\n---------------------------------\n\n*lvak[1]  Y  lvak[2]*\n---------------------------------')
+				await kill.sendTextWithMentions(from, '❤️ ' + lvak[1] + ' tiene la oportunidad del ' + lvpc + '% de estar con ' + lvak[2] + '. 👩‍❤️‍👨❣️\n*CASAMIENTO...*\n---------------------------------\n\n*mmmm, suerte😎*\n---------------------------------')
             } else {
 				await kill.reply(from, 'Falta la pareja de tortolitos!', id)
             }
