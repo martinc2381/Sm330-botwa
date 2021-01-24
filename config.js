@@ -91,7 +91,7 @@ module.exports = kconfig = async (kill, message) => {
 		
 		
         const mess = {
-            wait: '✅¿Puedes esperar un rato? Realizar este tipo de comando lleva algún tiempo✅.',
+            wait: '✅¿Puedes esperar un rato? Realizar este tipo de comando lleva algún tiempo🏳.',
             error: {
                 St: '¡Lo usaste mal jaja! \nPara usar esto, envía o etiqueta una foto con este mensaje.',
                 Ki: 'Para eliminar administradores, primero debe eliminar su ADM.',
@@ -231,6 +231,9 @@ module.exports = kconfig = async (kill, message) => {
 			await kill.sendFile(from, './lib/media/img/belle.png', 'belle.png', belle, id)
 			break
 
+		case 'termux':
+			await kill.sendFile(from, './lib/media/img/belle.png', 'termux.png', termux, id)
+			break
 			
         case 'stickernobg':
 		 if (isMedia) {
@@ -238,13 +241,14 @@ module.exports = kconfig = async (kill, message) => {
                     var mediaData = await decryptMedia(message, uaOverride)
                     var imageBase64 = `data:${mimetype};base64,${mediaData.toString('base64')}`
                     var base64img = imageBase64
-                    var outFile = './media/img/noBg.png'
-                    // untuk api key kalian bisa dapatkan pada website remove.bg
-                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'API-KEY', size: 'auto', type: 'auto', outFile })
+                    var outFile = './lib/media/img/noBg.png'
+                    var result = await removeBackgroundFromImageBase64({ base64img, apiKey: 'https://www.remove.bg/', size: 'auto', type: 'auto', outFile }) // bota sua propria api ai, cuidado no limite mensal
                     await fs.writeFile(outFile, result.base64img)
-                    await client.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
+                    await kill.sendImageAsSticker(from, `data:${mimetype};base64,${result.base64img}`)
+					await kill.reply(from, 'Trate de no usar esto cuando no lo nececite,', id)
                 } catch(err) {
                     console.log(err)
+		    await kill.reply(from, 'Ups! Algo esta mal en este comando!', id)
                 }
             }
             break
@@ -258,7 +262,7 @@ if (isMedia) {
                     kill.reply(from, mess.wait, id)
                     var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=60 --scale=256:256`, async function (error, stdout, stderr) {
                         var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
                         await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                         .catch(() => {
@@ -274,7 +278,7 @@ if (isMedia) {
                     kill.reply(from, mess.wait, id)
                     var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=60 --scale=256:256`, async function (error, stdout, stderr) {
                         var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
                         await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
                         .catch(() => {
@@ -871,26 +875,18 @@ if (isMedia) {
                 .catch(() => kill.sendText(from, 'An error occured!'))
             break
 
-        case 'tts': // Esse é enormeeeee, fazer o que, sou baiano pra jogar noutro js
-            if (args.length == 0) return kill.reply(from, 'Wrong Fromat!')
-                const ttsEn = require('node-gtts')('en')
-	        const ttsJp = require('node-gtts')('ja')
+        case 'tts':
+            if (args.length == 0) return kill.reply(from, `Texto a voz */tts "pefix idioma" texto, para ver los diomas: */idiomas*`)
+            const ttsGB = require('node-gtts')(args[0])
             const dataText = body.slice(8)
-            if (dataText === '') return kill.reply(from, 'Baka?', message.id)
-            if (dataText.length > 250) return kill.reply(from, 'Unable to convert', message.id)
-            var dataBhs = body.slice(5, 7)
-	        if (dataBhs == 'id') {
-		    } else if (dataBhs == 'en') {
-                ttsEn.save('./tts/resEn.mp3', dataText, function () {
-                    kill.sendPtt(from, './media/tts/resEn.mp3', message.id)
-                })
-		    } else if (dataBhs == 'jp') {
-                ttsJp.save('./tts/resJp.mp3', dataText, function () {
-                    kill.sendPtt(from, './media/tts/resJp.mp3', message.id)
-                })
-		    } else {
-		        kill.reply(from, 'Currently only English and Japanese are supported!', message.id)
-            }
+                if (dataText === '') return kill.reply(from, 'Cual es el texto?', id)
+                try {
+                    ttsGB.save('./media/tts.mp3', dataText, function () {
+                    kill.sendPtt(from, './media/tts.mp3', id)
+                    })
+                } catch (err) {
+                    kill.reply(from, err, id)
+                }
             break
 
         case 'idiomas':
@@ -2437,10 +2433,6 @@ if (isMedia) {
 
         case 'readme':
             kill.reply(from, readme, id)
-            break
-			
-	case 'termux':
-            kill.sendText(from, termux, id)
             break
 
 		
