@@ -204,34 +204,7 @@ module.exports = kconfig = async (kill, message) => {
             }
             break
 
-			case 'antisticker':
-            case 'antistiker':
-                    if (!isGroupMsg) return kill.reply(from, 'Lo sentimos, este comando solo se puede usar dentro del grupo!', id)
-                    if (!isGroupAdmins) return kill.reply(from, 'Falló, este comando solo puede ser utilizado por administradores de grupo!', id)
-                    if (kill[0] == 'on') {
-                        var cek = antisticker.includes(chatId);
-                        if(cek){
-                            return kill.reply(from, '*Anti Spam Sticker Detector* ya activo en este grupo', id) //if number already exists on database
-                        } else {
-                            antisticker.push(chatId)
-                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
-                            kill.reply(from, '*[Anti Sticker SPAM]* Ha sido activado\nCada miembro del grupo cuya etiqueta de spam sea más de 7 será expulsado por el bot!', id)
-                        }
-                    } else if (args[0] == 'off') {
-                        var cek = antilink.includes(chatId);
-                        if(cek){
-                            return kill.reply(from, '*Anti Spam Sticker Detector* ya está inactivo en este grupo', id) //if number already exists on database
-                        } else {
-                            let nixx = antisticker.indexOf(chatId)
-                            antisticker.splice(nixx, 1)
-                            fs.writeFileSync('./lib/helper/antisticker.json', JSON.stringify(antisticker))
-                            client.reply(from, '*[Anti Sticker SPAM]* ha sido deshabilitado\n', id)
-                        }
-                    } else {
-                        kill.reply(from, `Establezca on / off\n\n*[Anti Sticker SPAM]*\nCada miembro del grupo que sea una calcomanía de spam será expulsado por el bot!`, id)
-                    }
-                    break
-		
+			
 
 		case 'ttp':
 			if (args.length == 0) return kill.reply(from, '¿Dónde está la frase?', id)
@@ -280,39 +253,18 @@ module.exports = kconfig = async (kill, message) => {
         case 'stikergif':
         case 'gif':
            if (isMedia) {
-                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
-                    var mediaData = await decryptMedia(message, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
+                if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
+                    const mediaData = await decryptMedia(message, uaOverride)
+                    kill.reply(from, '[WAIT] Procesando⏳ puede llevar ± 1 min!', id)
+                    const filename = `./media/aswu.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                    await exec(`gify ${filename} ./media/output.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
+                        const gif = await fs.readFileSync('./media/output.gif', { encoding: "base64" })
                         await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Uff, hubo un error en la convercion, puede ser el peso del viseo/gif.', id)
-                        })
                     })
-                } else {
-                    kill.reply(from, `Si recibe esto puede ser por 2 motivos.\n\n1 - Esto no es un gif o video.\n\n2 - el gif o video supera los 15 segundos`, id)
-                }
-            } else if (quotedMsg) {
-                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
-                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Uff, hubo un error en la convercion, puede ser el peso del viseo/gif.', id)
-                        })
-                    })
-                } else {
-                    kill.reply(from, `Si recibe esto puede ser por 2 motivos.\n\n1 - Esto no es un gif o video.\n\n2 - el gif o video supera los 15 segundos.`, id)
-                }
-			} else {
-                kill.reply(from, mess.error.St, id)
+                } else (
+                    kill.reply(from, '[❗] VIDEO CON CAPTION: */gif* MAX 10s!', id)
+                )
             }
             break
 			
