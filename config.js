@@ -101,7 +101,7 @@ module.exports = kconfig = async (kill, message) => {
 		Ga: 'Solo los administradores pueden usarlo, así que chaoo jaja!',
 		Gp: 'Lo siento, pero este es un comando para grupos.🕳💦.',
 		Ac: 'Solo los grupos que permiten contenido +18 pueden usar comandos como este, si usted es el propietario y desea esto, use /nsfw enable o use en PRIV.',
-		Ba: 'Estimado administrador, si desea que use estos comandos, debe permitirme ser miembro😙!',
+		Ba: 'Estimado administrador, si desea que use estos comandos, debe permitirme ser admin😙!',
                 Iv: '¿Este enlace es correcto? Me parece mal...'
             }
         }
@@ -252,19 +252,40 @@ module.exports = kconfig = async (kill, message) => {
         case 'stickergif':
         case 'stikergif':
         case 'gif':
-           if (isMedia) {
-                if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
-                    const mediaData = await decryptMedia(message, uaOverride)
-                    kill.reply(from, '[WAIT] Procesando⏳ puede llevar ± 1 min!', id)
-                    const filename = `./media/aswu.${mimetype.split('/')[1]}`
+if (isMedia) {
+                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
+                    var mediaData = await decryptMedia(message, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
-                    await exec(`gify ${filename} ./media/output.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
-                        const gif = await fs.readFileSync('./media/output.gif', { encoding: "base64" })
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
                         await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Aff! la conversion tuvo errores, puede ser el peso de video/gif.', id)
+                        })
                     })
-                } else (
-                    kill.reply(from, '[❗] VIDEO CON CAPTION: */gif* MAX 10s!', id)
-                )
+                } else {
+                    kill.reply(from, `Encaso de que reciba esto considere 2 opciones.\n\n1 - Esto no es un gif o video.\n\n2 - el gif o video supera los 15 segundos.`, id)
+                }
+            } else if (quotedMsg) {
+                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
+                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`gify ${filename} ./lib/media/stickergf.gif --fps=30 --scale=256:256`, async function (error, stdout, stderr) {
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Aff! la conversion tuvo errores, puede ser el peso de video/gif.', id)
+                        })
+                    })
+                } else {
+                    kill.reply(from, `Encaso de que reciba esto considere 2 opciones.\n\n1 - Esto no es un gif o video.\n\n2 - el gif o video supera los 15 segudnos.`, id)
+                }
+			} else {
+                kill.reply(from, mess.error.St, id)
             }
             break
 			
@@ -1361,7 +1382,7 @@ module.exports = kconfig = async (kill, message) => {
             if (!isBotGroupAdmins) return kill.reply(from, mess.error.Ba, id)
             if (isGroupMsg) {
                 const inviteLink = await kill.getGroupInviteLink(groupId);
-                kill.sendLinkWithAutoPreview(from, inviteLink, `\nAqui está el limk del grupo🤩 ${name}!`)
+                kill.sendLinkWithAutoPreview(from, inviteLink, `\nAqui está el link del grupo🤩 ${name}!`)
             } else {
             	kill.reply(from, 'Vaya, este es solo un comando de grupo.', id)
             }
