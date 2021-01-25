@@ -1859,7 +1859,12 @@ if (isMedia) {
             }
             break
 			
-			
+		
+	case 'neon':
+		if (args.length == 0) kill.reply(from, 'Pon un mensaje ahí!', id)
+		kill.reply(from, mess.wait, id)
+		await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/neon_light?text=${body.slice(4)}`, '', '', id)
+		break 
 			
 	case '3d':
 		if (args.length == 0) kill.reply(from, 'Pon un mensaje ahí!', id)
