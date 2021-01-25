@@ -764,7 +764,7 @@ if (isMedia) {
 			
 			case 'twit':
            if (args.length == 0) return kill.reply(from, 'Lo uso incorretamente.', id)
-            axios.get(`https://mhankbarbar.tech/api/twit?url=https://twitter.com/PassengersMovie/status/821025484150423557&apiKey=${body.slice(5)}`)
+            axios.get(`http://arugaz.my.id/api/media/twvid?url=${body.slice(5)}`)
             .then(async(rest) => {
 					var mp4 = rest.data.result
 					var tmp4 = rest.data.title
@@ -1863,13 +1863,13 @@ if (isMedia) {
 	case 'neon':
 		if (args.length == 0) kill.reply(from, 'Pon un mensaje ahí!', id)
 		kill.reply(from, mess.wait, id)
-		await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/neon_light?text=${body.slice(4)}`, '', '', id)
+		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/neontext?text=${body.slice(4)}`, '', '', id)
 		break 
 			
 	case '3d':
 		if (args.length == 0) kill.reply(from, 'Pon un mensaje ahí!', id)
 		kill.reply(from, mess.wait, id)
-		await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/text3d?text=${body.slice(4)}`, '', '', id)
+		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/text3d?text=${body.slice(4)}`, '', '', id)
 		break 
 		
 		
@@ -1879,6 +1879,17 @@ if (isMedia) {
 		await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/gaming?text=${body.slice(8)}`, '', '', id)
 		break
 		
+	case 'lava':
+		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
+		kill.reply(from, mess.wait, id)
+		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/lavatext?text=${body.slice(8)}`, '', '', id)
+		break
+			
+	case 'toxic':
+		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
+		kill.reply(from, mess.wait, id)
+		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/toxictext?text=${body.slice(8)}`, '', '', id)
+		break
 		
 	case 'fogareu':
 		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
@@ -1901,7 +1912,7 @@ if (isMedia) {
                 const fison = arkp.split('|')[0]
                 const twoso = arkp.split('|')[1]
                 if (fison > 10 || twoso > 10) return kill.reply(from, 'Disculpe, maximo de 10 letras.', id)
-                await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/phblogo?text1=${fison}&text2=${twoso}`, '', '', id)
+                await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/pornhub?text1=${fison}&text2=${twoso}`, '', '', id)
             } else {
                 await kill.reply(from, `Para usar esto, agregue dos oraciones, separándolas por el signo: |.`, id)
             }
