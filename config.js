@@ -1913,7 +1913,7 @@ if (isMedia) {
 			
 			
         case 'encerrar':
-            
+            if (isGroupMsg) {
 			kill.reply(from, 'Solicitud recibida!\nMe apagaré en 5 segundos.', id)
 		    await sleep(5000)
 			await kill.kill()
