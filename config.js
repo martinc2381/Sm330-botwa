@@ -769,13 +769,21 @@ if (isMedia) {
 					})
 			break
 			
-			
-        case 'insta':
-            if (args.length == 0) return kill.reply(from, 'El nombre de usuario?', id)
-            const ig = await axios.get(`https://docs-jojo.herokuapp.com/api/ighighlight?username=${body.slice(7)}`)
-			var insta = ig.data.Biodata
-            await kill.sendFileFromUrl(from, `${ig.data.Profile_pic}`, ``, `Username: ${ig.data.Username}\n\nNombre: ${ig.data.Name}\n\nbio: ${insta}\n\nSeguidores: ${ig.data.Jumlah_Followers}\n\nSigiendo: ${ig.data.Jumlah_Following}\n\npublicaciones: ${ig.data.Jumlah_Post}`, id)
+	case 'stalkig':
+            if (args.length == 0) return kill.reply(from, 'Nombre de usuario?', id)
+            const ig = await axios.get(`http://arugaz.my.id/api/media/stalkig?user=${body.slice(9)}`)
+			var insta = ig.data.result.biography
+            await kill.sendFileFromUrl(from, `${ig.data.result.profile_picture}`, ``, `Username: ${ig.data.result.username}\n\nNombre: ${ig.data.result.fullname}\n\nbio: ${insta}\n\nSeguidores: ${ig.data.result.followers}\n\nSigiendo: ${ig.data.followings}`, id)
             break
+			
+
+        case 'stalktw':
+            if (args.length == 0) return kill.reply(from, 'Nombre de usuario?', id)
+            const tw = await axios.get(`http://arugaz.my.id/api/media/stalktwitt?user=${body.slice(9)}`)
+			var insta = tw.data.result.biography
+            await kill.sendFileFromUrl(from, `${tw.data.result.profile_picture}`, ``, `Username: ${tw.data.result.username}\n\nNombre: ${tw.data.result.fullname}\n\nbio: ${insta}\n\nSeguidores: ${tw.data.result.followers}\n\nSigiendo: ${tw.data.followings}`, id)
+            break
+		
 
 	case 'twit':
             if (args.length == 0) return kill.reply(from, 'Enlace caido?', id)
@@ -1588,7 +1596,7 @@ if (isMedia) {
         case 'everyone':
 			if (isGroupMsg && isGroupAdmins) {
 				const groupMem = await kill.getGroupMembers(groupId)
-				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Asunto: ${body.slice(10)} 〙✪═\n\n`
+				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Asunto: ${body.slice(10)} 〙✪═\n`
 				for (let i = 0; i < groupMem.length; i++) {
 					hehe += '🔥╠➥ '
 					hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
@@ -1598,7 +1606,7 @@ if (isMedia) {
 				await kill.sendTextWithMentions(from, hehe, id)
 			} else if (isGroupMsg && isOwner) {
 				const groupMem = await kill.getGroupMembers(groupId)
-				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Assunto: ${body.slice(10)} 〙✪═\n\n`
+				let hehe = `🛑╔══✪〘 HOLA TODOS MARCADOS 〙✪══\n⚠╠✪〘 Assunto: ${body.slice(10)} 〙✪═\n`
 				for (let i = 0; i < groupMem.length; i++) {
 					hehe += '🔥╠➥ '
 					hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
