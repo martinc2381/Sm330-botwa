@@ -1148,6 +1148,19 @@ if (isMedia) {
             break
 
 
+	case 'type':
+            if (args.length !== 1) return kill.reply(from, 'Olvidaste ponerlo(ON) o quitarlo [off].', id)
+			if (args[0] == 'on') {
+				kill.simulateTyping(from, true, id)
+                kill.reply(from, '¡Hecho! Se ha activado la simulacion de "Escribiendo".', id)
+			} else if (args[0] == 'off') {
+				kill.simulateTyping(from, false
+                kill.reply(from, 'Entendido! Desactive las opciones de simulacion "Escribiendo"'
+            } else {
+                kill.reply(from, 'Olvidaste ponerlo (ON) o quitarlo [off].', id)
+            }
+            break
+			
         case 'welcome':
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             if (args.length !== 1) return kill.reply(from, 'Olvidaste ponerlo (ON) o quitarlo [off].', id)
