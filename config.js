@@ -1149,7 +1149,7 @@ if (isMedia) {
 
 
 	case 'type':
-            if (args.length !== 1) return kill.reply(from, 'Olvidaste ponerlo(ON) o quitarlo [off].', id)
+            if (args.length !== 0) return kill.reply(from, 'Olvidaste ponerlo(ON) o quitarlo [off].', id)
 			if (args[0] == 'on') {
 				kill.simulateTyping(from, true, id)
                 kill.reply(from, '¡Hecho! Se ha activado la simulacion de "Escribiendo".', id)
