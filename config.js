@@ -1154,8 +1154,8 @@ if (isMedia) {
 				kill.simulateTyping(from, true, id)
                 kill.reply(from, '¡Hecho! Se ha activado la simulacion de "Escribiendo".', id)
 			} else if (args[0] == 'off') {
-				kill.simulateTyping(from, false
-                kill.reply(from, 'Entendido! Desactive las opciones de simulacion "Escribiendo"'
+				kill.simulateTyping(from, false, id)
+                kill.reply(from, 'Entendido! Desactive las opciones de simulacion "Escribiendo"', id)
             } else {
                 kill.reply(from, 'Olvidaste ponerlo (ON) o quitarlo [off].', id)
             }
