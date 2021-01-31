@@ -1160,46 +1160,7 @@ if (isMedia) {
             const lirik = await axios.get(`https://arugaz.herokuapp.com/api/lirik?judul=${body.slice(5)}`)
 			await kill.sendFileFromUrl(from, lirik.data.link, ``, 'xd', id)
 			break
-
-
-	case 's':
-            if (isMedia) {
-                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
-                    var mediaData = await decryptMedia(message, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
-                    await exec(`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
-                        })
-                    })
-                } else {
-                    kill.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter`, id)
-                }
-            } else if (quotedMsg) {
-                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
-                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
-                    kill.reply(from, mess.wait, id)
-                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
-                    await fs.writeFileSync(filename, mediaData)
-                    await exec(`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
-                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
-                        .catch(() => {
-                            kill.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
-                        })
-                    })
-                } else {
-                    kill.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter.`, id)
-                }
-			} else {
-                kill.reply(from, mess.error.St, id)
-            }
-            break
-			
+	
 
         case 'welcome':
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
