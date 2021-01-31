@@ -627,7 +627,7 @@ if (isMedia) {
 			const quota = quote1.data.quotes
 			kill.reply(from, mess.wait, id)
 			await sleep(5000)
-            translate(quota, 'pt')
+            translate(quota, 'es')
                 .then((quoted) => kill.reply(from, `➸ *Frase* : ${quoted}\n➸ *Personaje* : ${quote1.data.character}\n➸ *Anime* : ${quote1.data.anime}`, id))
             } else if (quote == 2) {
             const skya = await get.get('http://mhankbarbars.herokuapp.com/api/quotesnime/random').json() 
@@ -635,7 +635,7 @@ if (isMedia) {
 			const quot = skya.data.quote
 			kill.reply(from, mess.wait, id)
 			await sleep(5000)
-            translate(quot, 'pt')
+            translate(quot, 'es')
                 .then((quote) => kill.reply(from, `➸ *Frase* : ${quote}\n➸ *Personaje* : ${skya_.chara}\n➸ *Anime* : ${skya_.anime}`, id))
 			} else if (quote == 3) {
 			const aiquote = await axios.get("http://inspirobot.me/api?generate=true")
@@ -688,7 +688,7 @@ if (isMedia) {
 			console.log(chara)
 			kill.reply(from, mess.wait, id)
 			await sleep(5000)
-			translate(chara, 'pt')
+			translate(chara, 'es')
                 .then((reschar) => kill.sendFileFromUrl(from, `${char.data.foto}`, ``, `Nome: ${char.data.nama}\n\nDescrição: ${reschar}\n\nFonte: ${char.data.sumber}`, id))
             break
 
@@ -721,7 +721,7 @@ if (isMedia) {
             const dia = await axios.get(`https://docs-jojo.herokuapp.com/api/fml`)
 			var acon = dia.data.result.fml
             await sleep(5000)
-            translate(acon, 'pt')
+            translate(acon, 'es')
                 .then((lfts) => kill.reply(from, lfts, id))
 			break
 
@@ -732,7 +732,7 @@ if (isMedia) {
 			var sign = names.data.arti
 			kill.reply(from, mess.wait, id)
 			await sleep(5000)
-            translate(sign, 'pt')
+            translate(sign, 'es')
                 .then((cado) => kill.reply(from, cado, id))
 			break
 
@@ -756,7 +756,7 @@ if (isMedia) {
 			console.log(wikit)
 			kill.reply(from, mess.wait, id)
 			await sleep(5000)
-            translate(wikit, 'pt')
+            translate(wikit, 'es')
                 .then((resulta) => kill.reply(from, resulta, id))
             break
 
@@ -1155,80 +1155,61 @@ if (isMedia) {
 			}
             break
 			
+			
 	case 'lirik':
-                    if (args.length < 1) return reply('donde esta el titulo de la cancion, tio🤨')
-                    teha = body.slice(7)
-                    anu = await fetchJson(`https://arugaz.herokuapp.com/api/lirik?judul=${body.slice(5)}` , {method: 'get'})
-                    reply(anu.result)
-                break
+            const lirik = await axios.get(`https://arugaz.herokuapp.com/api/lirik?judul=${body.slice(5)}`)
+			await kill.sendFileFromUrl(from, lirik.data.link, ``, 'xd', id)
+			break
 
 
-			case 'stiker': 
-				case 'sticker':
-				case 's':
-					if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
-						const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-						const media = await kill.downloadAndSaveMediaMessage(encmedia)
-						ran = getRandom('.webp')
-						await ffmpeg(`./${media}`)
-							.input(media)
-							.on('start', function (cmd) {
-								console.log(`Started : ${cmd}`)
-							})
-							.on('error', function (err) {
-								console.log(`Error : ${err}`)
-								fs.unlinkSync(media)
-								kill.reply(mess.error.stick)
-							})
-							.on('end', function () {
-								console.log('Finish')
-								buff = fs.readFileSync(ran)
-								kill.sendMessage(from, buff, sticker, {quoted: mek})
-								fs.unlinkSync(media)
-								fs.unlinkSync(ran)
-							})
-							.addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-							.toFormat('webp')
-							.save(ran)
-					} else if ((isMedia && mek.message.videoMessage.seconds < 11 || isQuotedVideo && mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
-						const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-						const media = await client.downloadAndSaveMediaMessage(encmedia)
-						ran = getRandom('.webp')
-						kill.reply(mess.wait)
-						await ffmpeg(`./${media}`)
-							.inputFormat(media.split('.')[1])
-							.on('start', function (cmd) {
-								console.log(`Started : ${cmd}`)
-							})
-							.on('error', function (err) {
-								console.log(`Error : ${err}`)
-								fs.unlinkSync(media)
-								tipe = media.endsWith('.mp4') ? 'video' : 'gif'
-								kill.reply(`A fallado ;(, intenta de nuevo ^_^`)
-							})
-							.on('end', function () {
-								console.log('Finish')
-								buff = fs.readFileSync(ran)
-								kill.sendMessage(from, buff, sticker, {quoted: mek})
-								fs.unlinkSync(media)
-								fs.unlinkSync(ran)
-							})
-							.addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-							.toFormat('webp')
-							.save(ran)
-							} else {
-						kill.reply(`Enviar la imagen con la etiqueta ${prefix} o */tag* imagen`)
-					}
-					break
+	case 's':
+            if (isMedia) {
+                if (mimetype === 'video/mp4' && message.duration < 15 || mimetype === 'image/gif' && message.duration < 15) {
+                    var mediaData = await decryptMedia(message, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
+                        })
+                    })
+                } else {
+                    kill.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter`, id)
+                }
+            } else if (quotedMsg) {
+                if (quotedMsg.mimetype == 'video/mp4' && quotedMsg.duration < 15 || quotedMsg.mimetype == 'image/gif' && quotedMsg.duration < 15) {
+                    var mediaData = await decryptMedia(quotedMsg, uaOverride)
+                    kill.reply(from, mess.wait, id)
+                    var filename = `./lib/media/stickergif.${quotedMsg.mimetype.split('/')[1]}`
+                    await fs.writeFileSync(filename, mediaData)
+                    await exec(`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
+                        var gif = await fs.readFileSync('./lib/media/stickergf.gif', { encoding: "base64" })
+                        await kill.sendImageAsSticker(from, `data:image/gif;base64,${gif.toString('base64')}`)
+                        .catch(() => {
+                            kill.reply(from, 'Aff! A conversão obteve erros, talvez seja o tamanho do gif ou seu peso.', id)
+                        })
+                    })
+                } else {
+                    kill.reply(from, `Caso receba isso considere 2 motivos.\n\n1 - Isso não é um gif ou video.\n\n2 - O gif ou video tem mais de 15 segundos, passando do limite que posso converter.`, id)
+                }
+			} else {
+                kill.reply(from, mess.error.St, id)
+            }
+            break
 			
-			
+
         case 'welcome':
 			if (!isGroupMsg) return kill.reply(from, mess.error.Gp, id)
             if (args.length !== 1) return kill.reply(from, 'Olvidaste ponerlo (ON) o quitarlo [off].', id)
 			if (args[0] == 'on') {
                 welkom.push(chat.id)
                 fs.writeFileSync('./lib/welcome.json', JSON.stringify(welkom))
+				kill.simulateTyping(from, true, id)
                 kill.reply(from, '¡Hecho! Se han activado las funciones Bienvenida y Adiós.', id)
+				kill.simulateTyping(from, false, id)
 			} else if (args[0] == 'off') {
 				let welcom = welcome.indexOf(chatId)
                 welkom.splice(welcom, 1)
@@ -1396,7 +1377,7 @@ if (isMedia) {
             const base64 = `data:image/jpg;base64,${image.toString("base64")}`
 			kill.reply(from, mess.wait, id)
 			await sleep(5000)
-            translate(synopsis, 'pt')
+            translate(synopsis, 'es')
                 .then(async (syno) => {
 				    const content = `*Anime encontrado!*\n\n✨️ *Titulo:* ${title}\n\n🎆️ *Episodios:* ${episodes}\n\n💌️ *Classificacion:* ${rated}\n\n❤️ *Nota:* ${score}\n\n💚️ *Sinopsis:* ${syno}\n\n🌐️ *Link*: ${url}`
 					await kill.sendImage(from, base64, title, content, id)
@@ -1477,7 +1458,7 @@ if (isMedia) {
 					} else {
 						var pfp = pic
 					} 
-					await kill.sendFileFromUrl(from, pfp, 'pfp.jpg', `*Datos de perfil..* ✨️ \n\n 🔖️ *¿Cuál es tu etiqueta de usuario?? ${namae}*\n\n💌️ *Frase del recadorra?*\n${status}\n\n 👑️ *Eres un administrador? ${adm}*`)
+					await kill.sendFileFromUrl(from, pfp, 'pfp.jpg', `*Datos de perfil..* ✨️ \n\n 🔖️ *¿Cuál es tu etiqueta de usuario?? ${namae}*\n\n💌️ *Estado?*\n${status}\n\n 👑️ *Eres un administrador? ${adm}*`)
 			    } else if (quotedMsg) {
 					var qmid = quotedMsgObj.sender.id
 					var pic = await kill.getProfilePicFromServer(qmid)
@@ -1687,7 +1668,7 @@ if (isMedia) {
 					hehe += '🔥╠➥ '
 					hehe += ` @${groupMem[i].id.replace(/@c.us/g, '')}\n`
 				}
-				hehe += '\n✔╚═✪〘 Gracias, te amo ❤ 〙✪═'
+				hehe += '✔╚═✪〘 Gracias, te amo ❤ 〙✪═'
 				await sleep(2000)
 				await kill.sendTextWithMentions(from, hehe, id)
 			} else if (isGroupMsg) {
