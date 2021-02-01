@@ -2890,11 +2890,6 @@ if (isMedia) {
             kill.sendFileFromUrl(from, `${url}`, 'meme.jpg', `${title}`, id)
             break
 			
-			
-        case 'date':
-			const timeda = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
-			await kill.reply(from, 'Ahora son exactamente\n"' + timeda + '"', id)
-			break
 		
 
         case 'menu':
