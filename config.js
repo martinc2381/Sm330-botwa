@@ -69,7 +69,7 @@ module.exports = kconfig = async (kill, message) => {
         const isGroupAdmins = isGroupMsg ? groupAdmins.includes(sender.id) : false
         const isBotGroupAdmins = isGroupMsg ? groupAdmins.includes(botNumber + '@c.us') : false
 	const chats = (type === 'chat') ? body : (type === 'image' || type === 'video') ? caption : ''
-        const ownerNumber = '+529984907794' // MUDE ISSO PARA O SEU NUMERO
+        const ownerNumber = '529984****@c.us' // MUDE ISSO PARA O SEU NUMERO
         const isOwner = sender.id === ownerNumber
         global.pollfile = 'poll_Config_'+chat.id+'.json'
         global.voterslistfile = 'poll_voters_Config_'+chat.id+'.json'
@@ -224,6 +224,45 @@ module.exports = kconfig = async (kill, message) => {
 				kill.sendImageAsSticker(from, res.data.result)
 			})
 			break
+			
+		case 'sporn':
+            try {
+				if (isGroupMsg) {
+					if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
+					if (args.length == 0) return kill.reply(from, 'Ingrese un término de búsqueda!', id)
+					const xvide = await axios.get(`https://mnazria.herokuapp.com/api/porn?search=${body.slice(7)}`)
+					const rexvi = xvide.data.result[0]
+					await kill.sendFileFromUrl(from, `${rexvi.image}`, '', `Titulo: ${rexvi.title}\n\nAutor: ${rexvi.actors}\n\nDuracion: ${rexvi.duration}\n\nLink: ${rexvi.url}`, id)
+				} else {
+					if (args.length == 0) return kill.reply(from, 'Ingrese un término de búsqueda!', id)
+					const xvide = await axios.get(`https://mnazria.herokuapp.com/api/porn?search=${body.slice(7)}`)
+					const rexvi = xvide.data.result[0]
+					await kill.sendFileFromUrl(from, `${rexvi.image}`, '', `Titulo: ${rexvi.title}\n\nAutor: ${rexvi.actors}\n\nDuracion: ${rexvi.duration}\n\nLink: ${rexvi.url}`, id)
+				}
+			} catch (error) {
+				kill.reply(from, 'No pude encontrar porno xd!', id)
+			}
+            break
+			
+			
+		case 'xvideos':
+            try {
+				if (isGroupMsg) {
+					if (!isNsfw) return kill.reply(from, mess.error.Ac, id)
+					if (args.length == 0) return kill.reply(from, 'Olvidaste insertar un enlace de xvideos?', id)
+					const xv = await axios.get(`https://mnazria.herokuapp.com/api/porndownloadxvideos?url=${body.slice(9)}`)
+					const xvidw = xv.data.mp4
+					await kill.sendFileFromUrl(from, xvidw, 'video.mp4', 'Hmmm travieso', id)
+				} else {
+					if (args.length == 0) return kill.reply(from, 'Olvidaste insertar un enlace de xvideos?', id)
+					const xv = await axios.get(`https://mnazria.herokuapp.com/api/porndownloadxvideos?url=${body.slice(9)}`)
+					const xvidw = xv.data.mp4
+					await kill.sendFileFromUrl(from, xvidw, 'video.mp4', 'Hmmm travieso', id)
+				}
+			} catch (error) {
+				kill.reply(from, 'No se pudo descargar porno!', id)
+			}
+            break
 			
 			
 		case 'anonymod':
@@ -822,21 +861,29 @@ if (isMedia) {
 
 			
 
-         case 'mp3': // eu censurei o acesso pois as apis estão offlines, e fazer isso evita que usem o comando e te de problemas
-             if (args.length == 0) return kill.reply(from, 'Lo uso incorrectamente.', id)
-            axios.get(`http://arugaz.my.id/api/media/ytaudio?url=${body.slice(5)}`)
+         case 'mp3':
+            if (args.length == 0) return kill.reply(from, 'Lo usaste incorretamente.', id)
+            axios.get(`http://st4rz.herokuapp.com/api/yta2?url=${body.slice(5)}`)
             .then(async(rest) => {
-					var m3pa = rest.data.infourl
+					var m3pa = rest.data.result
+					var m3ti = rest.data.title
+					var m3tu = rest.data.thumb
+					var m3fo = rest.data.ext
+					await kill.sendFileFromUrl(from, m3tu, '', `Titulo: ${m3ti}\nFormato:${m3fo}\n\nEspero averlo echo bien, ahora solo espera a que el audio se envie!`, id)
 					await kill.sendFileFromUrl(from, m3pa, '', '', id)
                 })
 			break
 
 
         case 'mp4':
-           if (args.length == 0) return kill.reply(from, 'Lo uso incorretamente.', id)
-            axios.get(`http://arugaz.my.id/api/media/ytvideo?url=${body.slice(5)}`)
+            if (args.length == 0) return kill.reply(from, 'Lo usaste incorretamente.', id)
+            axios.get(`http://st4rz.herokuapp.com/api/ytv2?url=${body.slice(5)}`)
             .then(async(rest) => {
-					var mp4 = rest.data.infourl
+					var mp4 = rest.data.result
+					var tmp4 = rest.data.title
+					var m4tu = rest.data.thumb
+					var m4fo = rest.data.ext
+					await kill.sendFileFromUrl(from, m4tu, '', `Titulo: ${tmp4}\nFormato:${m4fo}\n\nEspero averlo echo bien, ahora solo espera que se envie el video!`, id)
 					await kill.sendFileFromUrl(from, mp4, `video.mp4`, tmp4, id)
                 })
 			break
@@ -920,7 +967,9 @@ if (isMedia) {
 					kill.reply(from, `Lo sentimos, para evitar prohibiciones de WhatsApp, el límite de envío de audio es de 16 MB, y esto tiene ${asize.data.filesize}.`, id)
 				} else {
 					await kill.sendFileFromUrl(from, `${res.data.result[0].thumbnail}`, ``, `Titulo: ${res.data.result[0].title}\n\nDuracion: ${res.data.result[0].duration} segundos\n\nHace: ${playre}\n\nVisualizaciones: ${res.data.result[0].viewCount}\n\nEspero averlo echo bien, ahora solo espera que tu video se envie, NO UTILIZES ESTE COMANDO HASTA QUE EL PROCESO TERMINE!!`, id)
+					
 					console.log(res.data.result[0].title)
+					
 					axios.get(`http://st4rz.herokuapp.com/api/yta2?url=http://youtu.be/${res.data.result[0].id}`)
 					.then(async(rest) => {
 						var m3pa = rest.data.result
@@ -1044,6 +1093,17 @@ if (isMedia) {
 			}
 			break
 			
+			
+	case 'clima':
+       		if (args.length == 0) return kill.reply(from, 'Ingrese el nombre de su ciudad.', id)
+            try {
+				const clima = await axios.get(`https://pt.wttr.in/${body.slice(7)}?format=Cidade%20=%20%l+\n\nEstado%20=%20%C+%c+\n\nTemperatura%20=%20%t+\n\nUmidade%20=%20%h\n\nVento%20=%20%w\n\nLua agora%20=%20%m\n\nNascer%20do%20Sol%20=%20%S\n\nPor%20do%20Sol%20=%20%s`)
+				await kill.sendFileFromUrl(from, `https://wttr.in/${body.slice(7)}.png`, '', `La foto de arriba contiene un pronóstico de 2 días, el mensaje de abajo es el clima ahora.\n\n${clima.data}`, id)
+            } catch {
+                kill.reply(from, 'extrañoho...\nAsegúrate de no usar acentos ok?', id)
+            }
+            break
+			
 
         case 'iris':
 			try {
@@ -1068,7 +1128,43 @@ if (isMedia) {
 			}
 			break
 
+			
+	case 'ptt':
+            if (quotedMsgObj) {
+                let encryptMedia
+                let replyOnReply = await kill.getMessageById(quotedMsgObj.id)
+                let obj = replyOnReply.quotedMsgObj
+                if (/ptt|audio/.test(quotedMsgObj.type)) {
+                    encryptMedia = quotedMsgObj
+                    if (encryptMedia.animated) encryptMedia.mimetype = ''
+                } else if (obj && /ptt|audio/.test(obj.type)) {
+                    encryptMedia = obj
+                } else return
+                const _mimetype = encryptMedia.mimetype
+                const mediaData = await decryptMedia(encryptMedia)
+                await kill.sendPtt(from, `data:${_mimetype};base64,${mediaData.toString('base64')}`, '', id)
+            } else kill.reply(from, 'Usa esto en audios!', id)
+            break
+			
 
+	case 'get':
+            if (quotedMsgObj) {
+                let encryptMedia
+                let replyOnReply = await kill.getMessageById(quotedMsgObj.id)
+                let obj = replyOnReply.quotedMsgObj
+                if (/ptt|audio|video|image|document|sticker/.test(quotedMsgObj.type)) {
+                    encryptMedia = quotedMsgObj
+                    if (encryptMedia.animated) encryptMedia.mimetype = ''
+                } else if (obj && /ptt|audio|video|image/.test(obj.type)) {
+                    encryptMedia = obj
+                } else return
+                const _mimetype = encryptMedia.mimetype
+                const mediaData = await decryptMedia(encryptMedia)
+                await kill.sendFile(from, `data:${_mimetype};base64,${mediaData.toString('base64')}`, '', 'S2', encryptMedia.id)
+            } else kill.reply(from, '¿De verdad tienes un archivo sobre eso??', id)
+            break
+			
+			
         case 'wallpaper':
             if (args.length == 0) return kill.reply(from, 'Necesitas decirme que quieres de fondo de pantalla!', id)
             const quere = body.slice(6)
@@ -1916,20 +2012,33 @@ if (isMedia) {
 
         case 'enviar':
             const arka = body.trim().substring(body.indexOf(' ') + 1)
-            if (args.length == 0 || args.length == 1) return kill.reply(from, 'Defina el número y luego un mensaje, separándolos por |, por ejemplo...\n\n/enviar <numero> | <mensaje>.', id)
-			if (isGroupMsg && isGroupAdmins) {
-				await kill.sendText(`${args[0]}` + '@c.us', `${arka.split('|')[1]}`)
-				await kill.sendText(from, 'Mensaje enviado.')
-		    } else if (isGroupMsg && isOwner) {
-				await kill.sendText(`${args[0]}` + '@c.us', `${arka.split('|')[1]}`)
-				await kill.sendText(from, 'Mensaje enviado.')
-			} else if (isGroupMsg) {
-				await kill.reply(from, mess.error.Ga, id)
+            if (args.length == 0) return kill.reply(from, 'Necesitas definir entre [-gp, -pv ou -help] para usar!', id)
+			const gid = groupId.replace('@g.us', '').replace('c.us', '')
+			if (isGroupMsg) {
+				if (args[0] == '-gp') {
+					await kill.sendText(`${args[1]}` + '@g.us', `_Mensagem >_\n*"${arka.split('|')[1]} "*` + '\n\n_Quien envió =_ ' + '\n*"' + name + '"*' + '\n\n_Como responder:_')
+					await kill.sendText(`${args[1]}` + '@g.us', `/enviar -gp ${gid} | Coloque sua resposta aqui`)
+					await kill.sendText(from, 'Mensage enviado.')
+				} else if (args[0] == '-pv') {
+					await kill.sendText(`${args[1]}` + '@c.us', `${arka.split('|')[1]}` + '\n\n_Quien envió =_ ' + '*' + name + '*' + '\n\n_Como responder:_')
+					await kill.sendText(`${args[1]}` + '@c.us', `/enviar -gp ${gid} | Coloque sua resposta aqui`)
+					await kill.sendText(from, 'Mensage enviado.')
+				} else if (args[0] == '-help' || args[0] == '-h') {
+					await kill.reply(from, 'Para usar, escriba el comando y al frente escriba -pv para privado, o -gp para grupos, y frente a ellos use el ID, separando el mensaje por |. Ejemplo:\n/enviar -gp 529984****-174362736 | hola?\n\nPuede obtener las ID con el comando */id*, y recuerde usar sin el @c.us e @g.us.', id)
+				} else {
+					await kill.reply(from, 'Para usar, escriba el comando y al frente escriba -pv para privado, o -gp para grupos, y frente a ellos use el ID, separando el mensaje por |. Ejemplo:\n/enviar -gp 529984****-174362736 | hola?\n\nPuede obtener las ID con el comando */id*, y recuerde usar sin el @c.us e @g.us.', id)
+				}
 			} else {
-				await kill.reply(from, mess.error.Gp, id)
+				await kill.reply(from, mess.error.Gp + '\nSi desea unirse a un grupo [/legiao].', id)
 			}
             break
 
+			
+	case 'date':
+			const timeda = moment(t * 1000).format('DD/MM/YY HH:mm:ss')
+			await kill.reply(from, 'Ahora son exactamente\n"' + timeda + '"', id)
+			break
+			
 
         case 'blocks':
             
