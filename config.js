@@ -1,7 +1,3 @@
-/*
-* Recodado por Lucas R. e construido em homenagem ao Legião Z.
-* Evite remover coisas como o Link do legião, obrigado!
-*/
 const { decryptMedia } = require('@open-wa/wa-decrypt')
 const fs = require('fs-extra')
 const axios = require('axios')
@@ -314,58 +310,7 @@ module.exports = kconfig = async (kill, message) => {
                 kill.reply(from, mess.error.Ga, id)
             }
             break
-			
-			
-        case 'blacklist':
-            if (isGroupMsg && isGroupAdmins) {
-				if (args.length !== 1) return kill.reply(from, 'Defina entre on y off!', id)
-				if (args[0] == 'on') {
-					bklist.push(chatId)
-					fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
-					kill.reply(from, 'Anti números accionado.\nUse /bklist (Número) para adicionar números.', id)
-				} else if (args[0] == 'off') {
-					let exclu = bklist.indexOf(chatId)
-					bklist.splice(exclu, 1)
-					fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
-					kill.reply(from, 'Anti números offline.', id)
-				}
-			} else if (isGroupMsg && isOwner) {
-				if (args.length !== 1) return kill.reply(from, 'Defina entre on y off!', id)
-				if (args[0] == 'on') {
-					bklist.push(chatId)
-					fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
-					kill.reply(from, 'Anti números acionado.\nUse /bklist (Número) para adicionar números.', id)
-				} else if (args[0] == 'off') {
-					let exclu = bklist.indexOf(chatId)
-					bklist.splice(exclu, 1)
-					fs.writeFileSync('./lib/blacklist.json', JSON.stringify(bklist))
-					kill.reply(from, 'Anti números offline.', id)
-				}
-            } else {
-                kill.reply(from, mess.error.Ga, id)
-            }
-            break	
-		
-			
-        case 'bklist':
-            if (isGroupMsg && isGroupAdmins) {
-				if (args.length == 0) return kill.reply(from, 'Defina un número.', id)
-				const bkls = body.slice(8) + '@c.us'
-				atbk.push(bkls)
-				fs.writeFileSync('./lib/anti.json', JSON.stringify(atbk))
-				await client.reply(from, 'Número adicionado a black-list', id)
-			} else if (isGroupMsg && isOwner) {
-				if (args.length == 0) return kill.reply(from, 'Defina un número.', id)
-				const bkls = body.slice(8) + '@c.us'
-				atbk.push(bkls)
-				fs.writeFileSync('./lib/anti.json', JSON.stringify(atbk))
-				await client.reply(from, 'Número adicionado a black-list', id)
-            } else {
-                kill.reply(from, mess.error.Ga, id)
-            }
-            break
-		
-			
+				
         
         case 'stickergif':
         case 'stikergif':
