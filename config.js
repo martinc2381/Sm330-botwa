@@ -1679,12 +1679,6 @@ if (isMedia) {
             }
             break
 			
-		
-	case 'neon':
-		if (args.length == 0) kill.reply(from, 'Pon un mensaje ahí!', id)
-		kill.reply(from, mess.wait, id)
-		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/neontext?text=${body.slice(4)}`, '', '', id)
-		break 
 			
 	case '3d':
 		if (args.length == 0) kill.reply(from, 'Pon un mensaje ahí!', id)
@@ -1699,17 +1693,7 @@ if (isMedia) {
 		await kill.sendFileFromUrl(from, `https://docs-jojo.herokuapp.com/api/gaming?text=${body.slice(8)}`, '', '', id)
 		break
 		
-	case 'lava':
-		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
-		kill.reply(from, mess.wait, id)
-		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/lavatext?text=${body.slice(8)}`, '', '', id)
-		break
-			
-	case 'toxic':
-		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
-		kill.reply(from, mess.wait, id)
-		await kill.sendFileFromUrl(from, `https://arugaz.my.id/api/textpro/toxictext?text=${body.slice(8)}`, '', '', id)
-		break
+
 		
 	case 'fogareu':
 		if (args.length == 0) kill.reply(from, 'Pon un nombre ahí!', id)
